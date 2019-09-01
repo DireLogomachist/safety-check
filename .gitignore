@@ -1,0 +1,54 @@
+=============== 
+Custom
+===============
+Assets/Plugins.meta
+Assets/Plugins/
+Assets/GoogleVR.meta
+Assets/GoogleVR/
+Assets/Standard Assets/
+Assets/Standard Assets.meta
+GvrIgnoreManifestMergeCheck.txt
+Assets/ShaderForge.meta
+Assets/ShaderForge/
+Assets/SkySerie Freebie/
+Assets/SkySerie Freebie.meta
+Assets/ProCore/
+Assets/ProCore.meta
+Dist/
+
+=============== 
+Unity generated
+===============
+Library/
+Temp/
+Builds/
+Build/
+Logs/
+
+=====================================
+Visual Studio / MonoDevelop generated
+=====================================
+ExportedObj/
+obj/
+.vs/
+.vscode/
+*.svd
+*.userprefs
+/*.csproj
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
+
+============
+OS generated
+============
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
