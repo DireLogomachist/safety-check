@@ -39,13 +39,13 @@ public class Weapon : MonoBehaviour
     }
 
     public IEnumerator CurveLerp(Quaternion start, Quaternion end, AnimationCurve curve) {
-        float time = 0.8f;
+        float time = 0.5f;
         float elapsed = 0.0f;
         lerpFlag = true;
 
         while(elapsed < time) {
             elapsed += Time.deltaTime;
-            transform.rotation = Quaternion.Lerp(start, end, curve.Evaluate(elapsed/time));
+            transform.rotation = Quaternion.LerpUnclamped(start, end, curve.Evaluate(elapsed/time));
             yield return null;
         }
 
