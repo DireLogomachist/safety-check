@@ -2986,6 +2986,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  ammo: 5
 --- !u!95 &1977558138
 Animator:
   serializedVersion: 3
