@@ -12,4 +12,8 @@ public class ActionTrigger : MonoBehaviour {
 
     void Update() {
     }
+
+    void OnMouseDown() {
+        function.Invoke();
+    }
 }
