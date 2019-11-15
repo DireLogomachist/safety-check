@@ -64,22 +64,21 @@ public class Weapon : MonoBehaviour {
     public IEnumerator WeaponRotate(Vector3 rot) {
         Quaternion x = transform.rotation;
         Quaternion y = Quaternion.Euler(rot)*transform.rotation;
-        StartCoroutine(CurveLerp(x, y, curve));
+        StartCoroutine(CurveLerp(transform, x, y, curve, 0.5f));
         yield return null;
     }
 
-    public IEnumerator CurveLerp(Quaternion start, Quaternion end, AnimationCurve curve) {
-        float time = 0.5f;
+    public IEnumerator CurveLerp(Transform transform, Quaternion start, Quaternion end, AnimationCurve curve, float time) {
         float elapsed = 0.0f;
         inputFlag = true;
 
         while(elapsed < time) {
             elapsed += Time.deltaTime;
-            transform.rotation = Quaternion.LerpUnclamped(start, end, curve.Evaluate(elapsed/time));
+            transform.localRotation = Quaternion.LerpUnclamped(start, end, curve.Evaluate(elapsed/time));
             yield return null;
         }
 
-        transform.rotation = end;
+        transform.localRotation = end;
         inputFlag = false;
         yield return null;
     }
@@ -102,7 +101,6 @@ public class Weapon : MonoBehaviour {
                 ammo = 1;
             magDropped = true;
         }
-        Debug.Log("Mag drop");
     }
 
     public void CycleAction() {
@@ -122,7 +120,7 @@ public class Weapon : MonoBehaviour {
         if(ammo > 0) {
             // fire animation
             ammo -= 1;
-            if(ammo == 0)
+            if(ammo == 0 && !magDropped)
                 transform.Find("pivot").Find("mag").Find("round").gameObject.SetActive(false);
         }
         
@@ -130,14 +128,18 @@ public class Weapon : MonoBehaviour {
     }
 
     public void ToggleSights() {
+        AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
+        Transform front = transform.Find("pivot").Find("sight_full_front").Find("sight_front");
+        Transform back = transform.Find("pivot").Find("sight_full_rear").Find("sight_back");
         GetComponent<Animator>().Play("AR16_trigger");
         if(!sightsUp) {
-            GetComponent<Animator>().Play("AR16_sight_flip_up");
+            StartCoroutine(CurveLerp(front, front.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*front.localRotation, toggleCurve, 0.4f));
+            StartCoroutine(CurveLerp(back, back.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*back.localRotation, toggleCurve, 0.4f));
             sightsUp = true;
         } else {
-            GetComponent<Animator>().Play("AR16_sight_flip_down");
+            StartCoroutine(CurveLerp(front, front.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*front.localRotation, toggleCurve, 0.4f));
+            StartCoroutine(CurveLerp(back, back.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*back.localRotation, toggleCurve, 0.4f));
             sightsUp = false;
         }
-        Debug.Log("Toggle Sights");
     }
 }
