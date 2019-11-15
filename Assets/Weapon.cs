@@ -88,13 +88,7 @@ public class Weapon : MonoBehaviour {
     }
 
     public void MagDrop() {
-        if(!selectorUp) {
-            GetComponent<Animator>().Play("AR16_selector_up");
-            selectorUp = true;
-        } else  {
-            GetComponent<Animator>().Play("AR16_selector_down");
-            selectorUp = false;
-        }
+        ToggleSelector();
         if(!magDropped) {
             GetComponent<Animator>().Play("AR16_mag_removal");
             if(ammo > 0)
@@ -135,11 +129,21 @@ public class Weapon : MonoBehaviour {
         if(!sightsUp) {
             StartCoroutine(CurveLerp(front, front.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*front.localRotation, toggleCurve, 0.4f));
             StartCoroutine(CurveLerp(back, back.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*back.localRotation, toggleCurve, 0.4f));
-            sightsUp = true;
         } else {
             StartCoroutine(CurveLerp(front, front.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*front.localRotation, toggleCurve, 0.4f));
             StartCoroutine(CurveLerp(back, back.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*back.localRotation, toggleCurve, 0.4f));
-            sightsUp = false;
         }
+        sightsUp = !sightsUp;
+    }
+
+    public void ToggleSelector() {
+        AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
+        Transform selector = transform.Find("pivot").Find("selector");
+        if(!selectorUp) {
+            StartCoroutine(CurveLerp(selector, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*selector.localRotation, toggleCurve, 0.4f));
+        } else {
+            StartCoroutine(CurveLerp(selector, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*selector.localRotation, toggleCurve, 0.4f));
+        }
+        selectorUp = !selectorUp;
     }
 }
