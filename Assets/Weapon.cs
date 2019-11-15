@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class Weapon : MonoBehaviour {
 
+    public GameObject casing;
+    public GameObject round;
     public AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
 
     Queue<InputPair> inputBuffer = new Queue<InputPair>();
@@ -100,25 +102,22 @@ public class Weapon : MonoBehaviour {
     public void CycleAction() {
         GetComponent<Animator>().Play("AR16_charging_handle");
         GetComponent<Animator>().Play("AR16_bolt");
-        // eject casing
         if(ammo > 0) {
+            Eject(round);
             ammo -= 1;
-            if(ammo == 0)
+            if(ammo == 0 && !magDropped)
                 transform.Find("pivot").Find("mag").Find("round").gameObject.SetActive(false);
         }
-        Debug.Log("Cycle Action");
     }
 
     public void Fire() {
         GetComponent<Animator>().Play("AR16_mag_release");
         if(ammo > 0) {
-            // fire animation
+            Eject(casing);
             ammo -= 1;
             if(ammo == 0 && !magDropped)
                 transform.Find("pivot").Find("mag").Find("round").gameObject.SetActive(false);
         }
-        
-        Debug.Log("Fire");
     }
 
     public void ToggleSights() {
@@ -146,4 +145,10 @@ public class Weapon : MonoBehaviour {
         }
         selectorUp = !selectorUp;
     }
+
+    public void Eject(GameObject obj) {
+        GameObject ejection = GameObject.Instantiate(obj, transform.position, Quaternion.Euler(new Vector3(0,90,0))*transform.rotation);
+        ejection.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0.0f, 0.35f, 0.0f), new Vector3(55.0f, 1.0f, 5.0f), ForceMode.Impulse);
+    }
+
 }
