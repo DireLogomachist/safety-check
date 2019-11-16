@@ -244,6 +244,7 @@ Transform:
   - {fileID: 1437671810}
   - {fileID: 129568091}
   - {fileID: 636476652}
+  - {fileID: 847195451}
   m_Father: {fileID: 1178655553}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1640,7 +1641,7 @@ GameObject:
   - component: {fileID: 636476655}
   - component: {fileID: 636476654}
   m_Layer: 0
-  m_Name: ejection_spawn
+  m_Name: ejection_cycling_spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1654,7 +1655,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636476651}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.138, y: -0.067, z: -0.038}
+  m_LocalPosition: {x: 0.129, y: -0.063, z: -0.033}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_Children: []
   m_Father: {fileID: 77231889}
@@ -1954,6 +1955,84 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 821436757}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &847195450
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 847195451}
+  - component: {fileID: 847195453}
+  - component: {fileID: 847195452}
+  m_Layer: 0
+  m_Name: ejection_firing_spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &847195451
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847195450}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.184, y: -0.045, z: -0.033}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_Children: []
+  m_Father: {fileID: 77231889}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &847195452
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847195450}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &847195453
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847195450}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &876899500
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2700,6 +2779,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   ammo: 5
+  magAmmo: 0
+  magDropped: 0
 --- !u!95 &1178655555
 Animator:
   serializedVersion: 3
@@ -4637,6 +4718,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   ammo: 5
+  magAmmo: 0
+  magDropped: 0
 --- !u!95 &1977558138
 Animator:
   serializedVersion: 3
@@ -4663,6 +4746,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 876899501}
     m_Modifications:
+    - target: {fileID: 2402908028730387859, guid: 51afd5f05eaa8db4dbed45f17300d9f9,
+        type: 3}
+      propertyPath: m_Name
+      value: round
+      objectReference: {fileID: 0}
     - target: {fileID: -8771702578763127557, guid: 51afd5f05eaa8db4dbed45f17300d9f9,
         type: 3}
       propertyPath: m_Enabled
@@ -4677,11 +4765,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_UseGravity
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2402908028730387859, guid: 51afd5f05eaa8db4dbed45f17300d9f9,
-        type: 3}
-      propertyPath: m_Name
-      value: round
       objectReference: {fileID: 0}
     - target: {fileID: 1658311775608528768, guid: 51afd5f05eaa8db4dbed45f17300d9f9,
         type: 3}

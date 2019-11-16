@@ -15,8 +15,9 @@ public class Weapon : MonoBehaviour {
     bool inputFlag = false;
 
     public int ammo = 5;
+    int magAmmo;
     bool safe = false;
-    bool magDropped = false;
+    public bool magDropped = false;
     bool sightsUp = false;
     bool selectorUp = false;
 
@@ -25,7 +26,8 @@ public class Weapon : MonoBehaviour {
         triggers[0].function.AddListener(CycleAction);     // Charging Handle
         triggers[1].function.AddListener(ToggleSights);    // Trigger
         triggers[2].function.AddListener(Fire);            // Mag Release
-        triggers[3].function.AddListener(MagDrop);         // Selector
+        triggers[3].function.AddListener(MagToggle);       // Selector
+        magAmmo = ammo - 1;
         updateAmmoUI();
     }
 
@@ -45,7 +47,7 @@ public class Weapon : MonoBehaviour {
             // "Safe!" popup
             // load next level
             safe = true;
-            Debug.Log("Safe");
+            Debug.Log("Safe!");
         }
     }
 
@@ -68,21 +70,23 @@ public class Weapon : MonoBehaviour {
     public IEnumerator WeaponRotate(Vector3 rot) {
         Quaternion x = transform.rotation;
         Quaternion y = Quaternion.Euler(rot)*transform.rotation;
-        StartCoroutine(CurveLerp(transform, x, y, curve, 0.5f));
+        StartCoroutine(CurveLerp(transform, transform.localPosition, transform.localPosition, x, y, curve, 0.5f));
         yield return null;
     }
 
-    public IEnumerator CurveLerp(Transform transform, Quaternion start, Quaternion end, AnimationCurve curve, float time) {
+    public IEnumerator CurveLerp(Transform transform, Vector3 startPos, Vector3 endPos, Quaternion startRot, Quaternion endRot, AnimationCurve curve, float time) {
         float elapsed = 0.0f;
         inputFlag = true;
 
         while(elapsed < time) {
             elapsed += Time.deltaTime;
-            transform.localRotation = Quaternion.LerpUnclamped(start, end, curve.Evaluate(elapsed/time));
+            transform.localPosition = Vector3.LerpUnclamped(startPos, endPos, curve.Evaluate(elapsed/time));
+            transform.localRotation = Quaternion.LerpUnclamped(startRot, endRot, curve.Evaluate(elapsed/time));
             yield return null;
         }
 
-        transform.localRotation = end;
+        transform.localPosition = endPos;
+        transform.localRotation = endRot;
         inputFlag = false;
         yield return null;
     }
@@ -91,24 +95,24 @@ public class Weapon : MonoBehaviour {
         inputBuffer.Enqueue(new InputPair(input, Time.time));
     }
 
-    public void MagDrop() {
+    public void MagToggle() {
         ToggleSelector();
-        if(!magDropped) {
-            GetComponent<Animator>().Play("AR16_mag_removal");
-            if(ammo > 0)
-                ammo = 1;
-            magDropped = true;
-        }
+        ToggleMagazine();
+        updateAmmoUI();
     }
 
     public void CycleAction() {
         GetComponent<Animator>().Play("AR16_charging_handle");
         GetComponent<Animator>().Play("AR16_bolt");
         if(ammo > 0) {
-            StartCoroutine(Eject(round));
+            StartCoroutine(Eject(round, transform.Find("pivot").Find("ejection_cycling_spawn")));
             ammo -= 1;
+            if(!magDropped) {
+                magAmmo = ammo - 1;
+                if(magAmmo < 0) magAmmo = 0;
+            }
             updateAmmoUI();
-            if(ammo == 0 && !magDropped)
+            if(magAmmo == 0)
                 transform.Find("pivot").Find("mag").Find("round").gameObject.SetActive(false);
         }
     }
@@ -117,10 +121,15 @@ public class Weapon : MonoBehaviour {
         GetComponent<Animator>().Play("AR16_mag_release");
         if(ammo > 0) {
             GetComponent<Animator>().Play("AR16_bolt");
-            StartCoroutine(Eject(casing));
+            GetComponent<Animator>().Play("AR16_recoil");
+            StartCoroutine(Eject(casing, transform.Find("pivot").Find("ejection_firing_spawn")));
             ammo -= 1;
+            if(!magDropped) {
+                magAmmo = ammo - 1;
+                if(magAmmo < 0) magAmmo = 0;
+            }
             updateAmmoUI();
-            if(ammo == 0 && !magDropped)
+            if(magAmmo == 0)
                 transform.Find("pivot").Find("mag").Find("round").gameObject.SetActive(false);
         }
     }
@@ -131,11 +140,11 @@ public class Weapon : MonoBehaviour {
         Transform back = transform.Find("pivot").Find("sight_full_rear").Find("sight_back");
         GetComponent<Animator>().Play("AR16_trigger");
         if(!sightsUp) {
-            StartCoroutine(CurveLerp(front, front.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*front.localRotation, toggleCurve, 0.4f));
-            StartCoroutine(CurveLerp(back, back.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*back.localRotation, toggleCurve, 0.4f));
+            StartCoroutine(CurveLerp(front, front.localPosition, front.localPosition, front.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*front.localRotation, toggleCurve, 0.4f));
+            StartCoroutine(CurveLerp(back, back.localPosition, back.localPosition, back.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*back.localRotation, toggleCurve, 0.4f));
         } else {
-            StartCoroutine(CurveLerp(front, front.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*front.localRotation, toggleCurve, 0.4f));
-            StartCoroutine(CurveLerp(back, back.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*back.localRotation, toggleCurve, 0.4f));
+            StartCoroutine(CurveLerp(front, front.localPosition, front.localPosition, front.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*front.localRotation, toggleCurve, 0.4f));
+            StartCoroutine(CurveLerp(back, back.localPosition, back.localPosition, back.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*back.localRotation, toggleCurve, 0.4f));
         }
         sightsUp = !sightsUp;
     }
@@ -143,16 +152,38 @@ public class Weapon : MonoBehaviour {
     public void ToggleSelector() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
         Transform selector = transform.Find("pivot").Find("selector");
+        Vector3 pos = selector.localPosition;
         if(!selectorUp) {
-            StartCoroutine(CurveLerp(selector, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*selector.localRotation, toggleCurve, 0.4f));
+            StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*selector.localRotation, toggleCurve, 0.4f));
         } else {
-            StartCoroutine(CurveLerp(selector, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*selector.localRotation, toggleCurve, 0.4f));
+            StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*selector.localRotation, toggleCurve, 0.4f));
         }
         selectorUp = !selectorUp;
+        
     }
 
-    public IEnumerator Eject(GameObject obj) {
-        Transform spawn = transform.Find("pivot").Find("ejection_spawn");
+    public void ToggleMagazine() {
+        AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
+        Transform mag = transform.Find("pivot").Find("mag");
+        Vector3 move = new Vector3(0, -0.261f, 0);
+        if(!magDropped) {
+            StartCoroutine(CurveLerp(mag, mag.localPosition, mag.localPosition + move, mag.localRotation, mag.localRotation, toggleCurve, 0.4f));
+        } else {
+            StartCoroutine(CurveLerp(mag, mag.localPosition, mag.localPosition - move, mag.localRotation, mag.localRotation, toggleCurve, 0.4f));
+        }
+        magDropped = !magDropped;
+        if(magDropped) {
+            if(ammo > 0) {
+                magAmmo = ammo - 1;
+                ammo = 1;
+            }
+        } else {
+            ammo += magAmmo;
+        }
+    }
+
+
+    public IEnumerator Eject(GameObject obj, Transform spawn) {
         GameObject ejection = GameObject.Instantiate(obj, spawn.position, Quaternion.Euler(new Vector3(0,90,0))*spawn.rotation);
         ejection.transform.parent = null;
         Vector3 force = Quaternion.Euler(spawn.transform.eulerAngles)*(new Vector3(Random.RandomRange(-0.10f, -0.15f), Random.RandomRange(0.35f, .45f), Random.RandomRange(0, .01f)));
@@ -165,4 +196,5 @@ public class Weapon : MonoBehaviour {
         GameObject.Find("Ammo").GetComponent<Text>().text = "Ammo: " + ammo;
     }
 
+    Vector3 fireOffset = new Vector3(-.185f, .053f, .003f);
 }
