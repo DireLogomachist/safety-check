@@ -155,9 +155,10 @@ public class Weapon : MonoBehaviour {
         Transform spawn = transform.Find("pivot").Find("ejection_spawn");
         GameObject ejection = GameObject.Instantiate(obj, spawn.position, Quaternion.Euler(new Vector3(0,90,0))*spawn.rotation);
         ejection.transform.parent = null;
-        Vector3 force = Quaternion.Euler(spawn.transform.eulerAngles)*(new Vector3(Random.RandomRange(-0.08f, -0.15f), Random.RandomRange(0.3f, 0.4f), Random.RandomRange(0, .01f)));
+        Vector3 force = Quaternion.Euler(spawn.transform.eulerAngles)*(new Vector3(Random.RandomRange(-0.10f, -0.15f), Random.RandomRange(0.35f, .45f), Random.RandomRange(0, .01f)));
+        Vector3 forcePostion = Quaternion.Euler(spawn.transform.eulerAngles)*(new Vector3(Random.RandomRange(40.0f,150.0f), Random.RandomRange(-1.0f,1.0f), Random.RandomRange(-15.0f,0.0f)));
         yield return new WaitForSeconds(.1f);
-        ejection.GetComponent<Rigidbody>().AddForceAtPosition(force, new Vector3(55.0f, 1.0f, 5.0f), ForceMode.Impulse);
+        ejection.GetComponent<Rigidbody>().AddForceAtPosition(force, forcePostion, ForceMode.Impulse);
     }
 
     public void updateAmmoUI() {
