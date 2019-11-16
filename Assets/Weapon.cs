@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour {
 
@@ -25,6 +26,7 @@ public class Weapon : MonoBehaviour {
         triggers[1].function.AddListener(ToggleSights);    // Trigger
         triggers[2].function.AddListener(Fire);            // Mag Release
         triggers[3].function.AddListener(MagDrop);         // Selector
+        updateAmmoUI();
     }
 
     void Update() {
@@ -103,8 +105,9 @@ public class Weapon : MonoBehaviour {
         GetComponent<Animator>().Play("AR16_charging_handle");
         GetComponent<Animator>().Play("AR16_bolt");
         if(ammo > 0) {
-            Eject(round);
+            StartCoroutine(Eject(round));
             ammo -= 1;
+            updateAmmoUI();
             if(ammo == 0 && !magDropped)
                 transform.Find("pivot").Find("mag").Find("round").gameObject.SetActive(false);
         }
@@ -113,8 +116,10 @@ public class Weapon : MonoBehaviour {
     public void Fire() {
         GetComponent<Animator>().Play("AR16_mag_release");
         if(ammo > 0) {
-            Eject(casing);
+            GetComponent<Animator>().Play("AR16_bolt");
+            StartCoroutine(Eject(casing));
             ammo -= 1;
+            updateAmmoUI();
             if(ammo == 0 && !magDropped)
                 transform.Find("pivot").Find("mag").Find("round").gameObject.SetActive(false);
         }
@@ -146,9 +151,17 @@ public class Weapon : MonoBehaviour {
         selectorUp = !selectorUp;
     }
 
-    public void Eject(GameObject obj) {
-        GameObject ejection = GameObject.Instantiate(obj, transform.position, Quaternion.Euler(new Vector3(0,90,0))*transform.rotation);
-        ejection.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0.0f, 0.35f, 0.0f), new Vector3(55.0f, 1.0f, 5.0f), ForceMode.Impulse);
+    public IEnumerator Eject(GameObject obj) {
+        Transform spawn = transform.Find("pivot").Find("ejection_spawn");
+        GameObject ejection = GameObject.Instantiate(obj, spawn.position, Quaternion.Euler(new Vector3(0,90,0))*spawn.rotation);
+        ejection.transform.parent = null;
+        Vector3 force = Quaternion.Euler(spawn.transform.eulerAngles)*(new Vector3(Random.RandomRange(-0.08f, -0.15f), Random.RandomRange(0.3f, 0.4f), Random.RandomRange(0, .01f)));
+        yield return new WaitForSeconds(.1f);
+        ejection.GetComponent<Rigidbody>().AddForceAtPosition(force, new Vector3(55.0f, 1.0f, 5.0f), ForceMode.Impulse);
+    }
+
+    public void updateAmmoUI() {
+        GameObject.Find("Ammo").GetComponent<Text>().text = "Ammo: " + ammo;
     }
 
 }
