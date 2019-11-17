@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!65 &4645299230254631172
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182838644669030714}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0069155446, y: 0.27553314, z: 0.7332523}
+  m_Center: {x: 0.00066524954, y: -0.2507089, z: -0.017099231}
 --- !u!1001 &8189936459016927283
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10,7 +23,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 5b82c7c6275cdd449843416eb2338593,
         type: 3}
       propertyPath: m_Name
-      value: lower
+      value: AR16_lower
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 5b82c7c6275cdd449843416eb2338593,
         type: 3}
@@ -74,3 +87,9 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 35f540c0c45a60a46b73f39fc7a2f9a2, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b82c7c6275cdd449843416eb2338593, type: 3}
+--- !u!1 &182838644669030714 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 5b82c7c6275cdd449843416eb2338593,
+    type: 3}
+  m_PrefabInstance: {fileID: 8189936459016927283}
+  m_PrefabAsset: {fileID: 0}
