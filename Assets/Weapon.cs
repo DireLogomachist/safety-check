@@ -17,7 +17,7 @@ public class Weapon : MonoBehaviour {
     public int ammo = 5;
     int magAmmo;
     bool safe = false;
-    public bool magDropped = false;
+    bool magDropped = false;
     bool sightsUp = false;
     bool selectorUp = false;
 
@@ -140,6 +140,7 @@ public class Weapon : MonoBehaviour {
             GetComponent<Animator>().Play("AR16_bolt");
             GetComponent<Animator>().Play("AR16_recoil");
             StartCoroutine(Eject(casing, transform.Find("pivot").Find("ejection_firing_spawn")));
+            StartCoroutine(MuzzleFlash());
             ammo -= 1;
             if(!magDropped) {
                 magAmmo = ammo - 1;
@@ -215,6 +216,14 @@ public class Weapon : MonoBehaviour {
         Vector3 forcePostion = Quaternion.Euler(spawn.transform.eulerAngles)*(new Vector3(Random.RandomRange(40.0f,150.0f), Random.RandomRange(-1.0f,1.0f), Random.RandomRange(-15.0f,0.0f)));
         yield return new WaitForSeconds(.1f);
         ejection.GetComponent<Rigidbody>().AddForceAtPosition(force, forcePostion, ForceMode.Impulse);
+    }
+
+    IEnumerator MuzzleFlash() {
+        GameObject muzzleFlash = transform.Find("pivot").Find("muzzle_flash").gameObject;
+        muzzleFlash.transform.eulerAngles = new Vector3(Random.RandomRange(0,290), 0, 0);
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(0.15f);
+        muzzleFlash.SetActive(false);
     }
 
     void updateAmmoUI() {
