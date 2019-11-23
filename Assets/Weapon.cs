@@ -45,6 +45,7 @@ public class Weapon : MonoBehaviour {
 
         if(ammo <= 0 && !safe) {
             // "Safe!" popup
+            // disable input
             // load next level
             safe = true;
             Debug.Log("Safe!");
