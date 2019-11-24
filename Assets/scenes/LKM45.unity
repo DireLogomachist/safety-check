@@ -2143,12 +2143,12 @@ PrefabInstance:
     - target: {fileID: 7429428730572779212, guid: 62fb69385a4e03e4883628660d018c84,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.1705
+      value: -0.169
       objectReference: {fileID: 0}
     - target: {fileID: 7429428730572779212, guid: 62fb69385a4e03e4883628660d018c84,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.06760001
+      value: -0.061
       objectReference: {fileID: 0}
     - target: {fileID: 7429428730572779212, guid: 62fb69385a4e03e4883628660d018c84,
         type: 3}
@@ -2613,7 +2613,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  ammo: 1000
+  ammo: 10
 --- !u!95 &909856647
 Animator:
   serializedVersion: 3
