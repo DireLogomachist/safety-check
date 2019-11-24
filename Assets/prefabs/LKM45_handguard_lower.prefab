@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: e3a28a10f6a1d324a8650b398c0abdfe,
         type: 3}
       propertyPath: m_Name
-      value: LKM45_handguard_lower Variant
+      value: LKM45_handguard_lower
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e3a28a10f6a1d324a8650b398c0abdfe,
         type: 3}
@@ -67,5 +67,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2416733968201007103, guid: e3a28a10f6a1d324a8650b398c0abdfe,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c495b5d79b8fe304d8ab9592b7de4fd5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3a28a10f6a1d324a8650b398c0abdfe, type: 3}

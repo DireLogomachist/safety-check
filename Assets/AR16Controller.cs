@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Weapon : MonoBehaviour {
+public class AR16Controller : MonoBehaviour {
 
     public GameObject casing;
     public GameObject round;
