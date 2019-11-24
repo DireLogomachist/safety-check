@@ -22,14 +22,16 @@ public class LKM45Controller : MonoBehaviour {
     bool selectorUp = false;
     bool stockFolded = false;
     bool magReleaseDown = false;
+    bool stockSwitchDown = false;
 
     void Start() {
         ActionTrigger[] triggers = GetComponentsInChildren<ActionTrigger>();
         triggers[0].function.AddListener(FoldStock);        // Charging handle -> Folds stock
         triggers[1].function.AddListener(ToggleLaser);      // Trigger -> Toggles laser
-        triggers[2].function.AddListener(CycleAction);      // Mag release -> Cycles Action
-        triggers[3].function.AddListener(MagToggle);        // Selector -> Mag Drop (maybe will swap? same as AR16... maybe button in buttstock???
+        triggers[2].function.AddListener(CycleAction);      // Mag Release -> Cycles Action
+        triggers[3].function.AddListener(DustCover);        // Selector -> Dust Cover
         triggers[4].function.AddListener(Fire);             // Laser Sight Button -> Fires
+        triggers[5].function.AddListener(MagToggle);       // Stock Switch -> Mag Drop
         magAmmo = ammo - 1;
         updateAmmoUI();
     }
@@ -103,7 +105,7 @@ public class LKM45Controller : MonoBehaviour {
 
     IEnumerator MagToggleAction() {
         inputFlag = true;
-        ToggleSelector();
+        ToggleStockSwitch();
         ToggleMagazine();
         updateAmmoUI();
         yield return new WaitForSeconds(0.6f);
@@ -136,11 +138,11 @@ public class LKM45Controller : MonoBehaviour {
     void MagReleaseToggle() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
         Transform selector = transform.Find("pivot").Find("LKM45_mag_release");
-        Vector3 rot = selector.localPosition;
+        Vector3 pos = selector.localPosition;
         if(!magReleaseDown) {
-            StartCoroutine(CurveLerp(selector, rot, rot, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -25))*selector.localRotation, toggleCurve, 0.2f));
+            StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -25))*selector.localRotation, toggleCurve, 0.2f));
         } else {
-            StartCoroutine(CurveLerp(selector, rot, rot, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 25))*selector.localRotation, toggleCurve, 0.2f));
+            StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 25))*selector.localRotation, toggleCurve, 0.2f));
         }
         magReleaseDown = !magReleaseDown;
     }
@@ -176,9 +178,8 @@ public class LKM45Controller : MonoBehaviour {
 
     IEnumerator ToggleLaserAction() {
         inputFlag = true;
-        /*
         GetComponent<Animator>().Play("LKM45_trigger");
-        if(!laserOn) {
+        /*if(!laserOn) {
 
         } else {
 
@@ -192,11 +193,11 @@ public class LKM45Controller : MonoBehaviour {
     void ToggleSelector() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
         Transform selector = transform.Find("pivot").Find("LKM45_selector");
-        Vector3 rot = selector.localPosition;
+        Vector3 pos = selector.localPosition;
         if(!selectorUp) {
-            StartCoroutine(CurveLerp(selector, rot, rot, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -25))*selector.localRotation, toggleCurve, 0.3f));
+            StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -25))*selector.localRotation, toggleCurve, 0.3f));
         } else {
-            StartCoroutine(CurveLerp(selector, rot, rot, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 25))*selector.localRotation, toggleCurve, 0.3f));
+            StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 25))*selector.localRotation, toggleCurve, 0.3f));
         }
         selectorUp = !selectorUp; 
     }
@@ -221,7 +222,7 @@ public class LKM45Controller : MonoBehaviour {
         }
     }
 
-    void FoldStock() {
+    public void FoldStock() {
         QueueInput(FoldStockAction());
     }
 
@@ -243,6 +244,42 @@ public class LKM45Controller : MonoBehaviour {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, -175, 0))*selector.localRotation, toggleCurve, 0.7f));
         }
         stockFolded = !stockFolded;
+    }
+
+    void ToggleStockSwitch() {
+        AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
+        Transform selector = transform.Find("pivot").Find("LKM45_stock_switch");
+        Vector3 pos = selector.localPosition;
+        if(!stockSwitchDown) {
+            StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -100))*selector.localRotation, toggleCurve, 0.3f));
+        } else {
+            StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, -0, 100))*selector.localRotation, toggleCurve, 0.3f));
+        }
+        stockSwitchDown = !stockSwitchDown;
+    }
+
+    public void DustCover() {
+        QueueInput(DustCoverAction());
+    }
+
+    IEnumerator DustCoverAction() {
+        inputFlag = true;
+        ToggleSelector();
+        ToggleDustCover();
+        yield return new WaitForSeconds(0.8f);
+        inputFlag = false;
+    }
+
+    void ToggleDustCover() {
+        AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
+        Transform selector = transform.Find("pivot").Find("LKM45_dust_cover");
+        Vector3 pos = selector.localPosition;
+        if(!stockSwitchDown) {
+            StartCoroutine(CurveLerp(selector, pos, pos + new Vector3(0, 0.17f, 0), selector.localRotation, selector.localRotation, toggleCurve, 0.7f));
+        } else {
+            StartCoroutine(CurveLerp(selector, pos, pos - new Vector3(0, 0.17f, 0), selector.localRotation, selector.localRotation, toggleCurve, 0.7f));
+        }
+        stockSwitchDown = !stockSwitchDown;
     }
 
     IEnumerator Eject(GameObject obj, Transform spawn) {
