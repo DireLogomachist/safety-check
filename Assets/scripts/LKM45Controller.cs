@@ -266,7 +266,7 @@ public class LKM45Controller : MonoBehaviour {
         inputFlag = true;
         ToggleSelector();
         ToggleDustCover();
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(1.2f);
         inputFlag = false;
     }
 
