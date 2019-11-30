@@ -112,7 +112,7 @@ public class AR16Controller : MonoBehaviour {
     }
 
     IEnumerator CycleActionAction() {
-        inputFlag = false;
+        inputFlag = true;
         GetComponent<Animator>().Play("AR16_charging_handle");
         GetComponent<Animator>().Play("AR16_bolt");
         if(ammo > 0) {

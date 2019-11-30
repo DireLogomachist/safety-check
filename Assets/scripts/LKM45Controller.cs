@@ -117,7 +117,7 @@ public class LKM45Controller : MonoBehaviour {
     }
 
     IEnumerator CycleActionAction() {
-        inputFlag = false;
+        inputFlag = true;
         GetComponent<Animator>().Play("LKM45_bolt");
         MagReleaseToggle();
         if(ammo > 0) {
@@ -131,7 +131,7 @@ public class LKM45Controller : MonoBehaviour {
             if(magAmmo == 0)
                 transform.Find("pivot").Find("LKM45_mag").Find("round").gameObject.SetActive(false);
         }
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.6f);
         inputFlag = false;
     }
 
@@ -153,7 +153,7 @@ public class LKM45Controller : MonoBehaviour {
 
     IEnumerator FireAction() {
         inputFlag = true;
-        //GetComponent<Animator>().Play("LKM45_laser_button");
+        GetComponent<Animator>().Play("LKM45_laser_button");
         if(ammo > 0) {
             GetComponent<Animator>().Play("LKM45_bolt");
             GetComponent<Animator>().Play("LKM45_recoil");
