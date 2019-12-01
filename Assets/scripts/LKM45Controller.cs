@@ -24,6 +24,11 @@ public class LKM45Controller : MonoBehaviour {
     bool magReleaseDown = false;
     bool stockSwitchDown = false;
 
+    Transform pivot;
+    GameObject laser;
+    LineRenderer laserCore;
+    LineRenderer laserBlur;
+
     void Start() {
         ActionTrigger[] triggers = GetComponentsInChildren<ActionTrigger>();
         triggers[0].function.AddListener(FoldStock);        // Charging handle -> Folds stock
@@ -31,9 +36,19 @@ public class LKM45Controller : MonoBehaviour {
         triggers[2].function.AddListener(CycleAction);      // Mag Release -> Cycles Action
         triggers[3].function.AddListener(DustCover);        // Selector -> Dust Cover
         triggers[4].function.AddListener(Fire);             // Laser Sight Button -> Fires
-        triggers[5].function.AddListener(MagToggle);       // Stock Switch -> Mag Drop
+        triggers[5].function.AddListener(MagToggle);        // Stock Switch -> Mag Drop
+
+        pivot = transform.Find("pivot");
+        laser = pivot.Find("LKM45_laser").gameObject;
+        laserCore = pivot.Find("LKM45_laser_core").GetComponent<LineRenderer>();
+        laserBlur = pivot.Find("LKM45_laser_blur").GetComponent<LineRenderer>();
+
         magAmmo = ammo - 1;
         updateAmmoUI();
+        if(!laserOn) {
+            laserCore.SetVertexCount(0);
+            laserBlur.SetVertexCount(0);
+        }
     }
 
     void Update() {
@@ -55,6 +70,9 @@ public class LKM45Controller : MonoBehaviour {
             safe = true;
             Debug.Log("Safe!");
         }
+
+        if(laserOn)
+            drawLaser();
     }
 
     public void RotateUp() {
@@ -121,7 +139,7 @@ public class LKM45Controller : MonoBehaviour {
         GetComponent<Animator>().Play("LKM45_bolt");
         MagReleaseToggle();
         if(ammo > 0) {
-            StartCoroutine(Eject(round, transform.Find("pivot").Find("ejection_cycling_spawn")));
+            StartCoroutine(Eject(round, pivot.Find("ejection_cycling_spawn")));
             ammo -= 1;
             if(!magDropped) {
                 magAmmo = ammo - 1;
@@ -129,7 +147,7 @@ public class LKM45Controller : MonoBehaviour {
             }
             updateAmmoUI();
             if(magAmmo == 0)
-                transform.Find("pivot").Find("LKM45_mag").Find("round").gameObject.SetActive(false);
+                pivot.Find("LKM45_mag").Find("round").gameObject.SetActive(false);
         }
         yield return new WaitForSeconds(0.6f);
         inputFlag = false;
@@ -137,7 +155,7 @@ public class LKM45Controller : MonoBehaviour {
 
     void MagReleaseToggle() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
-        Transform selector = transform.Find("pivot").Find("LKM45_mag_release");
+        Transform selector = pivot.Find("LKM45_mag_release");
         Vector3 pos = selector.localPosition;
         if(!magReleaseDown) {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -25))*selector.localRotation, toggleCurve, 0.2f));
@@ -157,7 +175,7 @@ public class LKM45Controller : MonoBehaviour {
         if(ammo > 0) {
             GetComponent<Animator>().Play("LKM45_bolt");
             GetComponent<Animator>().Play("LKM45_recoil");
-            StartCoroutine(Eject(casing, transform.Find("pivot").Find("ejection_firing_spawn")));
+            StartCoroutine(Eject(casing, pivot.Find("ejection_firing_spawn")));
             StartCoroutine(MuzzleFlash());
             ammo -= 1;
             if(!magDropped) {
@@ -166,7 +184,7 @@ public class LKM45Controller : MonoBehaviour {
             }
             updateAmmoUI();
             if(magAmmo == 0)
-                transform.Find("pivot").Find("LKM45_mag").Find("round").gameObject.SetActive(false);
+                pivot.Find("LKM45_mag").Find("round").gameObject.SetActive(false);
         }
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
@@ -179,20 +197,20 @@ public class LKM45Controller : MonoBehaviour {
     IEnumerator ToggleLaserAction() {
         inputFlag = true;
         GetComponent<Animator>().Play("LKM45_trigger");
-        /*if(!laserOn) {
-
+        if(!laserOn) {
+            drawLaser();
         } else {
-
+            laserCore.SetVertexCount(0);
+            laserBlur.SetVertexCount(0);
         }
         laserOn = !laserOn;
-        */
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
     }
 
     void ToggleSelector() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
-        Transform selector = transform.Find("pivot").Find("LKM45_selector");
+        Transform selector = pivot.Find("LKM45_selector");
         Vector3 pos = selector.localPosition;
         if(!selectorUp) {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -25))*selector.localRotation, toggleCurve, 0.3f));
@@ -204,7 +222,7 @@ public class LKM45Controller : MonoBehaviour {
 
     void ToggleMagazine() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
-        Transform mag = transform.Find("pivot").Find("LKM45_mag");
+        Transform mag = pivot.Find("LKM45_mag");
         Vector3 move = new Vector3(0, -0.261f, 0);
         if(!magDropped) {
             StartCoroutine(CurveLerp(mag, mag.localPosition, mag.localPosition + move, mag.localRotation, mag.localRotation, toggleCurve, 0.6f));
@@ -236,7 +254,7 @@ public class LKM45Controller : MonoBehaviour {
 
     void ToggleStock() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
-        Transform selector = transform.Find("pivot").Find("LKM45_stock");
+        Transform selector = pivot.Find("LKM45_stock");
         Vector3 pos = selector.localPosition;
         if(!stockFolded) {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 175, 0))*selector.localRotation, toggleCurve, 0.7f));
@@ -248,7 +266,7 @@ public class LKM45Controller : MonoBehaviour {
 
     void ToggleStockSwitch() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
-        Transform selector = transform.Find("pivot").Find("LKM45_stock_switch");
+        Transform selector = pivot.Find("LKM45_stock_switch");
         Vector3 pos = selector.localPosition;
         if(!stockSwitchDown) {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -100))*selector.localRotation, toggleCurve, 0.3f));
@@ -272,7 +290,7 @@ public class LKM45Controller : MonoBehaviour {
 
     void ToggleDustCover() {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
-        Transform selector = transform.Find("pivot").Find("LKM45_dust_cover");
+        Transform selector = pivot.Find("LKM45_dust_cover");
         Vector3 pos = selector.localPosition;
         if(!stockSwitchDown) {
             StartCoroutine(CurveLerp(selector, pos, pos + new Vector3(0, 0.17f, 0), selector.localRotation, selector.localRotation, toggleCurve, 0.7f));
@@ -301,5 +319,15 @@ public class LKM45Controller : MonoBehaviour {
 
     void updateAmmoUI() {
         GameObject.Find("Ammo").GetComponent<Text>().text = "Ammo: " + ammo;
+    }
+
+    void drawLaser() {
+        Vector3 offset = 0.055f*pivot.transform.up;
+        laserCore.SetVertexCount(2);
+        laserBlur.SetVertexCount(2);
+        laserCore.SetPosition(0, laser.transform.position + offset);
+        laserCore.SetPosition(1, laser.transform.position + offset + 10*transform.Find("pivot").transform.right);
+        laserBlur.SetPosition(0, laser.transform.position + offset);
+        laserBlur.SetPosition(1, laser.transform.position + offset + 10*transform.Find("pivot").transform.right);
     }
 }
