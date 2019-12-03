@@ -10,6 +10,6 @@ public class Spin : MonoBehaviour {
     }
 
     void Update() {
-        transform.Rotate(new Vector3(speed*Time.deltaTime,0,0));
+        transform.localEulerAngles = transform.localEulerAngles + new Vector3(speed*Time.deltaTime,0,0);
     }
 }

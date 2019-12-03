@@ -11,7 +11,7 @@ public class LKM45Controller : MonoBehaviour {
     public AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
 
     Queue<InputPair> inputBuffer = new Queue<InputPair>();
-    float bufferLength = 1.5f;
+    float bufferLength = 1.0f;
     bool inputFlag = false;
 
     public int ammo = 5;
@@ -310,8 +310,8 @@ public class LKM45Controller : MonoBehaviour {
     }
 
     IEnumerator MuzzleFlash() {
-        GameObject muzzleFlash = transform.Find("pivot").Find("muzzle_flash").gameObject;
-        muzzleFlash.transform.eulerAngles = new Vector3(Random.RandomRange(0,290), 0, 0);
+        GameObject muzzleFlash = pivot.Find("muzzle_flash").gameObject;
+        muzzleFlash.transform.localEulerAngles = muzzleFlash.transform.localEulerAngles + new Vector3(Random.RandomRange(0,290),0,0);
         muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(0.15f);
         muzzleFlash.SetActive(false);
