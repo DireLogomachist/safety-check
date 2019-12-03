@@ -55,7 +55,7 @@
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                float3 adjustedWorldPos =  floor(i.worldPos.x/(_Scale)) + floor(i.worldPos.y/_Scale) + floor(i.worldPos.z/5000);
+                float3 adjustedWorldPos =  floor(i.worldPos.x/(_Scale)) + floor(i.worldPos.y/_Scale) + floor(i.worldPos.z*0);
                 float chessboard = adjustedWorldPos.x + adjustedWorldPos.y + adjustedWorldPos.z;
                 chessboard = frac(chessboard * 0.5);
                 chessboard *= 2;
