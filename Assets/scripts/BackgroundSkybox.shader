@@ -25,12 +25,43 @@
             float _Scale;
             float _Rotation;
 
+            const float isqrt2 = 0.70710676908493042;
+
             float3 RotateAroundYInDegrees (float3 vertex, float degrees) {
                 float alpha = degrees * UNITY_PI / 180.0;
                 float sina, cosa;
                 sincos(alpha, sina, cosa);
                 float2x2 m = float2x2(cosa, -sina, sina, cosa);
                 return float3(mul(m, vertex.xz), vertex.y).xzy;
+            }
+
+            float3 cubify (float3 s) {
+                float xx2 = s.x * s.x * 2.0;
+                float yy2 = s.y * s.y * 2.0;
+
+                float vx = xx2 - yy2;
+                float vy = yy2 - xx2;
+
+                float ii = vy - 3.0;
+                ii *= ii;
+
+                float isqrt = -sqrt(ii - 12.0 * xx2) + 3.0;
+
+                vx = -sqrt(vx + isqrt);
+                vy = -sqrt(vy + isqrt);
+                vx *= isqrt2;
+                vy *= isqrt2;
+                
+                return sign(s) * float3(vx, vy, 1.0);
+            }
+
+            float3 sphere2cube(float3 sphere) {
+                float3 f = abs(sphere);
+
+                bool a = f.y >= f.x && f.y >= f.z;
+                bool b = f.x >= f.z;
+
+                return a ? cubify(sphere.xzy).xzy : b ? cubify(sphere.yzx).zxy : cubify(sphere);
             }
 
             struct appdata {
