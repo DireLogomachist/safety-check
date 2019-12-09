@@ -228,6 +228,6 @@ public class AR16Controller : MonoBehaviour {
     }
 
     void updateAmmoUI() {
-        GameObject.Find("Ammo").GetComponent<Text>().text = "Ammo: " + ammo;
+        GameObject.Find("AmmoText").GetComponent<Text>().text = "Ammo: " + ammo;
     }
 }

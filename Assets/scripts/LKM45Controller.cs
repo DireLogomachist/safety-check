@@ -292,12 +292,11 @@ public class LKM45Controller : MonoBehaviour {
         AnimationCurve toggleCurve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
         Transform selector = pivot.Find("LKM45_dust_cover");
         Vector3 pos = selector.localPosition;
-        if(!stockSwitchDown) {
+        if(selectorUp) {
             StartCoroutine(CurveLerp(selector, pos, pos + new Vector3(0, 0.17f, 0), selector.localRotation, selector.localRotation, toggleCurve, 0.7f));
         } else {
             StartCoroutine(CurveLerp(selector, pos, pos - new Vector3(0, 0.17f, 0), selector.localRotation, selector.localRotation, toggleCurve, 0.7f));
         }
-        stockSwitchDown = !stockSwitchDown;
     }
 
     IEnumerator Eject(GameObject obj, Transform spawn) {
@@ -318,7 +317,7 @@ public class LKM45Controller : MonoBehaviour {
     }
 
     void updateAmmoUI() {
-        GameObject.Find("Ammo").GetComponent<Text>().text = "Ammo: " + ammo;
+        GameObject.Find("AmmoText").GetComponent<Text>().text = "Ammo: " + ammo;
     }
 
     void drawLaser() {
