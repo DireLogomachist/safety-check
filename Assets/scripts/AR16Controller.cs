@@ -72,6 +72,12 @@ public class AR16Controller : MonoBehaviour {
         inputFlag = true;
         Quaternion x = transform.rotation;
         Quaternion y = Quaternion.Euler(rot)*transform.rotation;
+
+        if(Quaternion.Euler(y.eulerAngles)*Vector3.right == -Vector3.forward) {
+            ClearInput();
+            StartCoroutine(Misfire());
+        }
+
         StartCoroutine(CurveLerp(transform, transform.localPosition, transform.localPosition, x, y, curve, 0.5f));
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
@@ -92,6 +98,10 @@ public class AR16Controller : MonoBehaviour {
 
     public void QueueInput(IEnumerator input) {
         inputBuffer.Enqueue(new InputPair(input, Time.time));
+    }
+
+    public void ClearInput() {
+        inputBuffer = new Queue<InputPair>();
     }
 
     public void MagToggle() {
@@ -229,5 +239,12 @@ public class AR16Controller : MonoBehaviour {
 
     void updateAmmoUI() {
         GameObject.Find("AmmoText").GetComponent<Text>().text = "Ammo: " + ammo;
+    }
+
+    IEnumerator Misfire() {
+        ClearInput();
+        inputFlag = true;
+        yield return new WaitForSeconds(1.0f);
+        StartCoroutine(FireAction());
     }
 }

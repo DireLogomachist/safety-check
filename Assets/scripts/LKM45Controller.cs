@@ -95,6 +95,12 @@ public class LKM45Controller : MonoBehaviour {
         inputFlag = true;
         Quaternion x = transform.rotation;
         Quaternion y = Quaternion.Euler(rot)*transform.rotation;
+
+        if(Quaternion.Euler(y.eulerAngles)*Vector3.right == -Vector3.forward) {
+            ClearInput();
+            StartCoroutine(Misfire());
+        }
+
         StartCoroutine(CurveLerp(transform, transform.localPosition, transform.localPosition, x, y, curve, 0.5f));
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
@@ -115,6 +121,10 @@ public class LKM45Controller : MonoBehaviour {
 
     public void QueueInput(IEnumerator input) {
         inputBuffer.Enqueue(new InputPair(input, Time.time));
+    }
+
+    public void ClearInput() {
+        inputBuffer = new Queue<InputPair>();
     }
 
     public void MagToggle() {
@@ -328,5 +338,12 @@ public class LKM45Controller : MonoBehaviour {
         laserCore.SetPosition(1, laser.transform.position + offset + 10*transform.Find("pivot").transform.right);
         laserBlur.SetPosition(0, laser.transform.position + offset);
         laserBlur.SetPosition(1, laser.transform.position + offset + 10*transform.Find("pivot").transform.right);
+    }
+
+    IEnumerator Misfire() {
+        ClearInput();
+        inputFlag = true;
+        yield return new WaitForSeconds(1.0f);
+        StartCoroutine(FireAction());
     }
 }
