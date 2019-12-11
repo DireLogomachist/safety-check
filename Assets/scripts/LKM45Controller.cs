@@ -124,7 +124,7 @@ public class LKM45Controller : MonoBehaviour {
     }
 
     public void ClearInput() {
-        inputBuffer = new Queue<InputPair>();
+        inputBuffer.Clear();
     }
 
     public void MagToggle() {
@@ -342,8 +342,8 @@ public class LKM45Controller : MonoBehaviour {
 
     IEnumerator Misfire() {
         ClearInput();
-        inputFlag = true;
         yield return new WaitForSeconds(1.0f);
-        StartCoroutine(FireAction());
+        ClearInput();
+        QueueInput(FireAction());
     }
 }
