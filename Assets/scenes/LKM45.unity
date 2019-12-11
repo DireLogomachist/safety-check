@@ -1443,8 +1443,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f1e310246c57b6418ccf8069e754e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  casing: {fileID: 4274755568313220246, guid: 2b0991b98c369464ebb70fb25f5ba502, type: 3}
-  round: {fileID: 2402908028730387859, guid: 51afd5f05eaa8db4dbed45f17300d9f9, type: 3}
   curve:
     serializedVersion: 2
     m_Curve:
@@ -1488,6 +1486,10 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   ammo: 10
+  magAmmo: 0
+  safe: 0
+  casing: {fileID: 4274755568313220246, guid: 2b0991b98c369464ebb70fb25f5ba502, type: 3}
+  round: {fileID: 2402908028730387859, guid: 51afd5f05eaa8db4dbed45f17300d9f9, type: 3}
 --- !u!95 &909856647
 Animator:
   serializedVersion: 3
