@@ -4,19 +4,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class LKM45Controller : MonoBehaviour {
+public class LKM45Controller : WeaponController {
 
     public GameObject casing;
     public GameObject round;
-    public AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
 
-    Queue<InputPair> inputBuffer = new Queue<InputPair>();
-    float bufferLength = 1.0f;
-    bool inputFlag = false;
-
-    public int ammo = 5;
-    int magAmmo;
-    bool safe = false;
     bool magDropped = false;
     bool laserOn = false;
     bool selectorUp = false;
@@ -24,12 +16,12 @@ public class LKM45Controller : MonoBehaviour {
     bool magReleaseDown = false;
     bool stockSwitchDown = false;
 
-    Transform pivot;
     GameObject laser;
     LineRenderer laserCore;
     LineRenderer laserBlur;
 
-    void Start() {
+    public override void Start() {
+        base.Start();
         ActionTrigger[] triggers = GetComponentsInChildren<ActionTrigger>();
         triggers[0].function.AddListener(FoldStock);        // Charging handle -> Folds stock
         triggers[1].function.AddListener(ToggleLaser);      // Trigger -> Toggles laser
@@ -38,93 +30,28 @@ public class LKM45Controller : MonoBehaviour {
         triggers[4].function.AddListener(Fire);             // Laser Sight Button -> Fires
         triggers[5].function.AddListener(MagToggle);        // Stock Switch -> Mag Drop
 
-        pivot = transform.Find("pivot");
         laser = pivot.Find("LKM45_laser").gameObject;
         laserCore = pivot.Find("LKM45_laser_core").GetComponent<LineRenderer>();
         laserBlur = pivot.Find("LKM45_laser_blur").GetComponent<LineRenderer>();
 
-        magAmmo = ammo - 1;
-        updateAmmoUI();
         if(!laserOn) {
             laserCore.SetVertexCount(0);
             laserBlur.SetVertexCount(0);
         }
     }
 
-    void Update() {
-        int c = inputBuffer.Count;
-        for(int i=0; i<c; i++) {
-            if((Time.time - inputBuffer.Peek().timestamp) > bufferLength) {
-                inputBuffer.Dequeue();
-            } else {
-                if(inputFlag == false)
-                    StartCoroutine(inputBuffer.Dequeue().input);
-                break;
-            }
-        }
-
-        if(ammo <= 0 && !safe) {
-            // "Safe!" popup
-            // disable input
-            // load next level
-            safe = true;
-            Debug.Log("Safe!");
-        }
+    public override void Update() {
+        base.Update();
 
         if(laserOn)
-            drawLaser();
+            DrawLaser();
     }
-
-    public void RotateUp() {
-        QueueInput(WeaponRotate(new Vector3(90, 0, 0)));
-    }
-
-    public void RotateDown() {
-        QueueInput(WeaponRotate(new Vector3(-90, 0, 0)));
-    }
-
-    public void RotateLeft() {
-        QueueInput(WeaponRotate(new Vector3(0, 90, 0)));
-    }
-
-    public void RotateRight() {
-        QueueInput(WeaponRotate(new Vector3(0, -90, 0)));
-    }
-
-    IEnumerator WeaponRotate(Vector3 rot) {
-        inputFlag = true;
-        Quaternion x = transform.rotation;
-        Quaternion y = Quaternion.Euler(rot)*transform.rotation;
-
-        if(Quaternion.Euler(y.eulerAngles)*Vector3.right == -Vector3.forward) {
-            ClearInput();
-            StartCoroutine(Misfire());
-        }
-
-        StartCoroutine(CurveLerp(transform, transform.localPosition, transform.localPosition, x, y, curve, 0.5f));
-        yield return new WaitForSeconds(0.5f);
-        inputFlag = false;
-    }
-
-    IEnumerator CurveLerp(Transform transform, Vector3 startPos, Vector3 endPos, Quaternion startRot, Quaternion endRot, AnimationCurve curve, float time) {
-        float elapsed = 0.0f;
-        while(elapsed < time) {
-            elapsed += Time.deltaTime;
-            transform.localPosition = Vector3.LerpUnclamped(startPos, endPos, curve.Evaluate(elapsed/time));
-            transform.localRotation = Quaternion.LerpUnclamped(startRot, endRot, curve.Evaluate(elapsed/time));
-            yield return null;
-        }
-
-        transform.localPosition = endPos;
-        transform.localRotation = endRot;
-    }
-
-    public void QueueInput(IEnumerator input) {
-        inputBuffer.Enqueue(new InputPair(input, Time.time));
-    }
-
-    public void ClearInput() {
-        inputBuffer.Clear();
+    
+    protected override IEnumerator Misfire() {
+        ClearInput();
+        yield return new WaitForSeconds(1.0f);
+        ClearInput();
+        QueueInput(FireAction());
     }
 
     public void MagToggle() {
@@ -135,7 +62,7 @@ public class LKM45Controller : MonoBehaviour {
         inputFlag = true;
         ToggleStockSwitch();
         ToggleMagazine();
-        updateAmmoUI();
+        UpdateAmmoUI();
         yield return new WaitForSeconds(0.6f);
         inputFlag = false;
     }
@@ -155,7 +82,7 @@ public class LKM45Controller : MonoBehaviour {
                 magAmmo = ammo - 1;
                 if(magAmmo < 0) magAmmo = 0;
             }
-            updateAmmoUI();
+            UpdateAmmoUI();
             if(magAmmo == 0)
                 pivot.Find("LKM45_mag").Find("round").gameObject.SetActive(false);
         }
@@ -192,7 +119,7 @@ public class LKM45Controller : MonoBehaviour {
                 magAmmo = ammo - 1;
                 if(magAmmo < 0) magAmmo = 0;
             }
-            updateAmmoUI();
+            UpdateAmmoUI();
             if(magAmmo == 0)
                 pivot.Find("LKM45_mag").Find("round").gameObject.SetActive(false);
         }
@@ -208,7 +135,7 @@ public class LKM45Controller : MonoBehaviour {
         inputFlag = true;
         GetComponent<Animator>().Play("LKM45_trigger");
         if(!laserOn) {
-            drawLaser();
+            DrawLaser();
         } else {
             laserCore.SetVertexCount(0);
             laserBlur.SetVertexCount(0);
@@ -326,11 +253,7 @@ public class LKM45Controller : MonoBehaviour {
         muzzleFlash.SetActive(false);
     }
 
-    void updateAmmoUI() {
-        GameObject.Find("AmmoText").GetComponent<Text>().text = "Ammo: " + ammo;
-    }
-
-    void drawLaser() {
+    void DrawLaser() {
         Vector3 offset = 0.055f*pivot.transform.up;
         laserCore.SetVertexCount(2);
         laserBlur.SetVertexCount(2);
@@ -338,12 +261,5 @@ public class LKM45Controller : MonoBehaviour {
         laserCore.SetPosition(1, laser.transform.position + offset + 10*transform.Find("pivot").transform.right);
         laserBlur.SetPosition(0, laser.transform.position + offset);
         laserBlur.SetPosition(1, laser.transform.position + offset + 10*transform.Find("pivot").transform.right);
-    }
-
-    IEnumerator Misfire() {
-        ClearInput();
-        yield return new WaitForSeconds(1.0f);
-        ClearInput();
-        QueueInput(FireAction());
     }
 }
