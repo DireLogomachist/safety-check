@@ -56,6 +56,30 @@ MonoBehaviour:
     type: 3}
   MisfirePopup: {fileID: 2507281870681193617, guid: 526509db0b74bc04884f1c83d577be95,
     type: 3}
+  popupCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8620076247375544870
 GameObject:
   m_ObjectHideFlags: 0
