@@ -15,6 +15,7 @@ public class PopupController : MonoBehaviour {
     GameObject newestPopup;
     float popupDuration = 2.0f;
     bool movingPopups = false;
+    float movingProgress = 0.0f;
 
     void Start() {
     }
@@ -41,13 +42,16 @@ public class PopupController : MonoBehaviour {
             popup = GameObject.Instantiate(MisfirePopup);
         }
         popup.transform.parent = transform;
-        if(newestPopup == null)
+        if(newestPopup == null) {
             popup.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
-        else
-            popup.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,newestPopup.GetComponent<RectTransform>().anchoredPosition.y-70);
-
-        popupBuffer.Enqueue(new BufferPair(popup, Time.time));
+        } else {
+            if(!movingPopups)
+                popup.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,newestPopup.GetComponent<RectTransform>().anchoredPosition.y-70);
+            else
+                popup.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,newestPopup.GetComponent<RectTransform>().anchoredPosition.y - popupCurve.Evaluate(movingProgress)*70 - 70);
+        }
         newestPopup = popup;
+        popupBuffer.Enqueue(new BufferPair(popup, Time.time));
     }
 
     IEnumerator FadeDestroyShift(GameObject obj) {
@@ -74,6 +78,7 @@ public class PopupController : MonoBehaviour {
         
         while(!empty && elapsed < 0.6f) {
             elapsed += Time.deltaTime;
+            movingProgress = elapsed/0.6f;
             if((popupBuffer.Count != buffer.Count)) {
                 int oldCount = buffer.Count;
                 buffer = new List<BufferPair>(popupBuffer.ToArray());
@@ -87,6 +92,7 @@ public class PopupController : MonoBehaviour {
             }
             yield return null;
         }
+        movingProgress = 0.0f;
         movingPopups = false;
     }
 }

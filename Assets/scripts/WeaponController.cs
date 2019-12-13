@@ -41,7 +41,6 @@ public class WeaponController : MonoBehaviour {
             // disable input
             // load next level
             safe = true;
-            Debug.Log("Safe!");
             canvas.Find("PopupController").GetComponent<PopupController>().Spawn(1);
         }
     }
@@ -75,7 +74,7 @@ public class WeaponController : MonoBehaviour {
         Quaternion x = transform.rotation;
         Quaternion y = Quaternion.Euler(rot)*transform.rotation;
 
-        if(Quaternion.Euler(y.eulerAngles)*Vector3.right == -Vector3.forward) {
+        if(Quaternion.Euler(y.eulerAngles)*Vector3.right == -Vector3.forward && ammo > 0) {
             ClearInput();
             StartCoroutine(Misfire());
         }
