@@ -15,9 +15,11 @@ public class WeaponController : MonoBehaviour {
     protected float bufferLength = 1.0f;
     protected bool inputFlag = false;
     protected Transform pivot;
+    protected Transform canvas;
     
     public virtual void Start() {
         pivot = transform.Find("pivot");
+        canvas = GameObject.Find("UICanvas").transform;
         magAmmo = ammo - 1;
         UpdateAmmoUI();
     }
@@ -40,6 +42,7 @@ public class WeaponController : MonoBehaviour {
             // load next level
             safe = true;
             Debug.Log("Safe!");
+            canvas.Find("PopupController").GetComponent<PopupController>().Spawn(1);
         }
     }
 
