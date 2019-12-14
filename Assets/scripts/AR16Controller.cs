@@ -67,6 +67,8 @@ public class AR16Controller : WeaponController {
             UpdateAmmoUI();
             if(magAmmo == 0)
                 pivot.Find("mag").Find("round").gameObject.SetActive(false);
+            if(ammo == 0)
+                StartCoroutine(Safe());
         }
         yield return new WaitForSeconds(0.8f);
         inputFlag = false;
@@ -92,7 +94,10 @@ public class AR16Controller : WeaponController {
             UpdateAmmoUI();
             if(magAmmo == 0)
                 pivot.Find("mag").Find("round").gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.8f);
             canvas.Find("PopupController").GetComponent<PopupController>().Spawn(4);
+            if(ammo == 0)
+                StartCoroutine(Safe());
         }
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;

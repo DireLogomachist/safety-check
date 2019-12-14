@@ -41,7 +41,6 @@ public class WeaponController : MonoBehaviour {
             // disable input
             // load next level
             safe = true;
-            canvas.Find("PopupController").GetComponent<PopupController>().Spawn(1);
         }
     }
 
@@ -103,5 +102,13 @@ public class WeaponController : MonoBehaviour {
 
     protected virtual IEnumerator Misfire() {
         yield break;
+    }
+
+    protected IEnumerator Safe() {
+        yield return new WaitForSeconds(2.0f);
+        canvas.Find("PopupController").GetComponent<PopupController>().Spawn(1);
+        yield return new WaitForSeconds(1.5f);
+        //center screen popup plus effects
+        //load next level
     }
 }

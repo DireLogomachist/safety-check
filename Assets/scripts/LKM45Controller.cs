@@ -88,6 +88,8 @@ public class LKM45Controller : WeaponController {
             UpdateAmmoUI();
             if(magAmmo == 0)
                 pivot.Find("LKM45_mag").Find("round").gameObject.SetActive(false);
+            if(ammo == 0)
+                StartCoroutine(Safe());
         }
         yield return new WaitForSeconds(0.6f);
         inputFlag = false;
@@ -125,9 +127,12 @@ public class LKM45Controller : WeaponController {
             UpdateAmmoUI();
             if(magAmmo == 0)
                 pivot.Find("LKM45_mag").Find("round").gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.8f);
+            canvas.Find("PopupController").GetComponent<PopupController>().Spawn(4);
+            if(ammo == 0)
+                StartCoroutine(Safe());
         }
         yield return new WaitForSeconds(0.5f);
-        canvas.Find("PopupController").GetComponent<PopupController>().Spawn(4);
         inputFlag = false;
     }
 
