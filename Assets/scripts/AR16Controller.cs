@@ -42,6 +42,8 @@ public class AR16Controller : WeaponController {
         ToggleSelector();
         ToggleMagazine();
         UpdateAmmoUI();
+        if(magDropped)
+            canvas.Find("PopupController").GetComponent<PopupController>().Spawn(2);
         yield return new WaitForSeconds(0.8f);
         inputFlag = false;
     }
@@ -61,6 +63,7 @@ public class AR16Controller : WeaponController {
                 magAmmo = ammo - 1;
                 if(magAmmo < 0) magAmmo = 0;
             }
+            canvas.Find("PopupController").GetComponent<PopupController>().Spawn(3);
             UpdateAmmoUI();
             if(magAmmo == 0)
                 pivot.Find("mag").Find("round").gameObject.SetActive(false);
@@ -89,6 +92,7 @@ public class AR16Controller : WeaponController {
             UpdateAmmoUI();
             if(magAmmo == 0)
                 pivot.Find("mag").Find("round").gameObject.SetActive(false);
+            canvas.Find("PopupController").GetComponent<PopupController>().Spawn(4);
         }
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
