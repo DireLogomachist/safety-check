@@ -13,6 +13,9 @@ public class AR16Controller : WeaponController {
     bool sightsUp = false;
     bool selectorUp = false;
 
+    AudioClip selectorUpClip;
+    AudioClip selectorDownClip;
+
     public override void Start() {
         base.Start();
         ActionTrigger[] triggers = GetComponentsInChildren<ActionTrigger>();
@@ -20,6 +23,9 @@ public class AR16Controller : WeaponController {
         triggers[1].function.AddListener(ToggleSights);    // Trigger
         triggers[2].function.AddListener(Fire);            // Mag Release
         triggers[3].function.AddListener(MagToggle);       // Selector
+
+        selectorUpClip = (AudioClip) Resources.Load("audio/AR16_switch_1");
+        selectorDownClip = (AudioClip) Resources.Load("audio/AR16_switch_2");
     }
 
     public override void Update() {
@@ -131,11 +137,12 @@ public class AR16Controller : WeaponController {
         Vector3 pos = selector.localPosition;
         if(!selectorUp) {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*selector.localRotation, toggleCurve, 0.4f));
+            GetComponent<AudioSource>().PlayOneShot(selectorUpClip, 0.1f);
         } else {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*selector.localRotation, toggleCurve, 0.4f));
+            GetComponent<AudioSource>().PlayOneShot(selectorDownClip, 0.1f);
         }
         selectorUp = !selectorUp;
-        
     }
 
     void ToggleMagazine() {
