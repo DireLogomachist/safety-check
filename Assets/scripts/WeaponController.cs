@@ -16,10 +16,16 @@ public class WeaponController : MonoBehaviour {
     protected bool inputFlag = false;
     protected Transform pivot;
     protected Transform canvas;
+    protected AudioSource audio;
+    protected AudioClip rotateClip1;
+    protected AudioClip rotateClip2;
     
     public virtual void Start() {
         pivot = transform.Find("pivot");
         canvas = GameObject.Find("UICanvas").transform;
+        audio = GetComponent<AudioSource>();
+        rotateClip1 = (AudioClip) Resources.Load("audio/rotate_swish_1");
+        rotateClip2 = (AudioClip) Resources.Load("audio/rotate_swish_2");
         magAmmo = ammo - 1;
         UpdateAmmoUI();
     }
@@ -79,7 +85,10 @@ public class WeaponController : MonoBehaviour {
         }
 
         StartCoroutine(CurveLerp(transform, transform.localPosition, transform.localPosition, x, y, curve, 0.5f));
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
+        if(Random.Range(0.0f,1.0f) > 0.5f) audio.PlayOneShot(rotateClip1, .1f);
+        else audio.PlayOneShot(rotateClip2, .1f);
+        yield return new WaitForSeconds(0.4f);
         inputFlag = false;
     }
 
