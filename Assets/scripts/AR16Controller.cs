@@ -16,6 +16,7 @@ public class AR16Controller : WeaponController {
     AudioClip selectorUpClip;
     AudioClip selectorDownClip;
     AudioClip boltCycleClip;
+    AudioClip gunshotClip;
 
     public override void Start() {
         base.Start();
@@ -28,6 +29,7 @@ public class AR16Controller : WeaponController {
         selectorUpClip = (AudioClip) Resources.Load("audio/AR16_switch_1");
         selectorDownClip = (AudioClip) Resources.Load("audio/AR16_switch_2");
         boltCycleClip = (AudioClip) Resources.Load("audio/AR16_bolt_cycle");
+        gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
     }
 
     public override void Update() {
@@ -96,6 +98,7 @@ public class AR16Controller : WeaponController {
             GetComponent<Animator>().Play("AR16_recoil");
             StartCoroutine(Eject(casing, pivot.Find("ejection_firing_spawn")));
             StartCoroutine(MuzzleFlash());
+            audio.PlayOneShot(gunshotClip, 1.0f);
             ammo -= 1;
             if(!magDropped) {
                 magAmmo = ammo - 1;

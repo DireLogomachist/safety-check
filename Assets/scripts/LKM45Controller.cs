@@ -20,6 +20,8 @@ public class LKM45Controller : WeaponController {
     LineRenderer laserCore;
     LineRenderer laserBlur;
 
+    AudioClip gunshotClip;
+
     public override void Start() {
         base.Start();
         ActionTrigger[] triggers = GetComponentsInChildren<ActionTrigger>();
@@ -33,6 +35,8 @@ public class LKM45Controller : WeaponController {
         laser = pivot.Find("LKM45_laser").gameObject;
         laserCore = pivot.Find("LKM45_laser_core").GetComponent<LineRenderer>();
         laserBlur = pivot.Find("LKM45_laser_blur").GetComponent<LineRenderer>();
+
+        gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
 
         if(!laserOn) {
             laserCore.SetVertexCount(0);
@@ -119,6 +123,7 @@ public class LKM45Controller : WeaponController {
             GetComponent<Animator>().Play("LKM45_recoil");
             StartCoroutine(Eject(casing, pivot.Find("ejection_firing_spawn")));
             StartCoroutine(MuzzleFlash());
+            audio.PlayOneShot(gunshotClip, 1.0f);
             ammo -= 1;
             if(!magDropped) {
                 magAmmo = ammo - 1;
@@ -143,6 +148,7 @@ public class LKM45Controller : WeaponController {
     IEnumerator ToggleLaserAction() {
         inputFlag = true;
         GetComponent<Animator>().Play("LKM45_trigger");
+        yield return new WaitForSeconds(0.1f);
         if(!laserOn) {
             DrawLaser();
         } else {
@@ -150,7 +156,7 @@ public class LKM45Controller : WeaponController {
             laserBlur.SetVertexCount(0);
         }
         laserOn = !laserOn;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.4f);
         inputFlag = false;
     }
 
