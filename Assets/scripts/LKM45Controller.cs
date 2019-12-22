@@ -21,6 +21,11 @@ public class LKM45Controller : WeaponController {
     LineRenderer laserBlur;
 
     AudioClip gunshotClip;
+    AudioClip stockSwitchClip;
+    AudioClip laserButtonClip;
+    AudioClip laserOnClip;
+    AudioClip laserOffClip;
+    AudioClip triggerClip;
 
     public override void Start() {
         base.Start();
@@ -37,7 +42,12 @@ public class LKM45Controller : WeaponController {
         laserBlur = pivot.Find("LKM45_laser_blur").GetComponent<LineRenderer>();
 
         gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
-
+        laserButtonClip = (AudioClip) Resources.Load("audio/LKM45_laser_button");
+        laserOnClip = (AudioClip) Resources.Load("audio/LKM45_laser_sight_on");
+        laserOffClip = (AudioClip) Resources.Load("audio/LKM45_laser_sight_off");
+        stockSwitchClip = (AudioClip) Resources.Load("audio/LKM45_stock_switch");
+        triggerClip = (AudioClip) Resources.Load("audio/LKM45_trigger");
+        
         if(!laserOn) {
             laserCore.SetVertexCount(0);
             laserBlur.SetVertexCount(0);
@@ -118,6 +128,7 @@ public class LKM45Controller : WeaponController {
     IEnumerator FireAction() {
         inputFlag = true;
         GetComponent<Animator>().Play("LKM45_laser_button");
+       audio.PlayOneShot(laserButtonClip, 0.2f);
         if(ammo > 0) {
             GetComponent<Animator>().Play("LKM45_bolt");
             GetComponent<Animator>().Play("LKM45_recoil");
@@ -148,12 +159,15 @@ public class LKM45Controller : WeaponController {
     IEnumerator ToggleLaserAction() {
         inputFlag = true;
         GetComponent<Animator>().Play("LKM45_trigger");
-        yield return new WaitForSeconds(0.1f);
+        audio.PlayOneShot(triggerClip, 0.2f);
+        yield return new WaitForSeconds(0.2f);
         if(!laserOn) {
             DrawLaser();
+            audio.PlayOneShot(laserOnClip, 1.0f);
         } else {
             laserCore.SetVertexCount(0);
             laserBlur.SetVertexCount(0);
+            audio.PlayOneShot(laserOffClip, 1.0f);
         }
         laserOn = !laserOn;
         yield return new WaitForSeconds(0.4f);
@@ -226,6 +240,7 @@ public class LKM45Controller : WeaponController {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, -0, 100))*selector.localRotation, toggleCurve, 0.3f));
         }
         stockSwitchDown = !stockSwitchDown;
+        audio.PlayOneShot(stockSwitchClip, 0.1f);
     }
 
     public void DustCover() {

@@ -13,10 +13,11 @@ public class AR16Controller : WeaponController {
     bool sightsUp = false;
     bool selectorUp = false;
 
-    AudioClip selectorUpClip;
-    AudioClip selectorDownClip;
     AudioClip boltCycleClip;
     AudioClip gunshotClip;
+    AudioClip selectorUpClip;
+    AudioClip selectorDownClip;
+    AudioClip triggerClip;
 
     public override void Start() {
         base.Start();
@@ -30,6 +31,7 @@ public class AR16Controller : WeaponController {
         selectorDownClip = (AudioClip) Resources.Load("audio/AR16_switch_2");
         boltCycleClip = (AudioClip) Resources.Load("audio/AR16_bolt_cycle");
         gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
+        triggerClip = (AudioClip) Resources.Load("audio/AR16_trigger");
     }
 
     public override void Update() {
@@ -126,6 +128,7 @@ public class AR16Controller : WeaponController {
         Transform front = pivot.Find("sight_full_front").Find("sight_front");
         Transform back = pivot.Find("sight_full_rear").Find("sight_back");
         GetComponent<Animator>().Play("AR16_trigger");
+        audio.PlayOneShot(triggerClip, 0.1f);
         if(!sightsUp) {
             StartCoroutine(CurveLerp(front, front.localPosition, front.localPosition, front.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*front.localRotation, toggleCurve, 0.4f));
             StartCoroutine(CurveLerp(back, back.localPosition, back.localPosition, back.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*back.localRotation, toggleCurve, 0.4f));
