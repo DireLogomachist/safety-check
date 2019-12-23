@@ -21,10 +21,12 @@ public class LKM45Controller : WeaponController {
     LineRenderer laserBlur;
 
     AudioClip gunshotClip;
-    AudioClip stockSwitchClip;
     AudioClip laserButtonClip;
     AudioClip laserOnClip;
     AudioClip laserOffClip;
+    AudioClip selectorDownClip;
+    AudioClip selectorUpClip;
+    AudioClip stockSwitchClip;
     AudioClip triggerClip;
 
     public override void Start() {
@@ -45,6 +47,8 @@ public class LKM45Controller : WeaponController {
         laserButtonClip = (AudioClip) Resources.Load("audio/LKM45_laser_button");
         laserOnClip = (AudioClip) Resources.Load("audio/LKM45_laser_sight_on");
         laserOffClip = (AudioClip) Resources.Load("audio/LKM45_laser_sight_off");
+        selectorDownClip = (AudioClip) Resources.Load("audio/LKM45_selector_down");
+        selectorUpClip = (AudioClip) Resources.Load("audio/LKM45_selector_up");
         stockSwitchClip = (AudioClip) Resources.Load("audio/LKM45_stock_switch");
         triggerClip = (AudioClip) Resources.Load("audio/LKM45_trigger");
         
@@ -93,6 +97,11 @@ public class LKM45Controller : WeaponController {
         MagReleaseToggle();
         if(ammo > 0) {
             StartCoroutine(Eject(round, pivot.Find("ejection_cycling_spawn")));
+            float rand = Random.Range(0.0f,1.0f);
+            Debug.Log(rand);
+            if(rand < 0.33f) audio.PlayOneShot(casingEject1Clip, 1.0f);
+            else if(rand > 0.76f) audio.PlayOneShot(casingEject2Clip, 1.0f);
+            else audio.PlayOneShot(casingEject3Clip, 1.0f);
             ammo -= 1;
             if(!magDropped) {
                 magAmmo = ammo - 1;
@@ -180,8 +189,10 @@ public class LKM45Controller : WeaponController {
         Vector3 pos = selector.localPosition;
         if(!selectorUp) {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -25))*selector.localRotation, toggleCurve, 0.3f));
+            audio.PlayOneShot(selectorDownClip, 1.0f);
         } else {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 25))*selector.localRotation, toggleCurve, 0.3f));
+            audio.PlayOneShot(selectorUpClip, 1.0f);
         }
         selectorUp = !selectorUp; 
     }
