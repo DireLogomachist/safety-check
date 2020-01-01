@@ -14,7 +14,6 @@ public class AR16Controller : WeaponController {
     bool selectorUp = false;
 
     AudioClip boltCycleClip;
-    AudioClip gunshotClip;
     AudioClip selectorUpClip;
     AudioClip selectorDownClip;
     AudioClip triggerClip;
@@ -30,7 +29,6 @@ public class AR16Controller : WeaponController {
         selectorUpClip = (AudioClip) Resources.Load("audio/AR16_switch_1");
         selectorDownClip = (AudioClip) Resources.Load("audio/AR16_switch_2");
         boltCycleClip = (AudioClip) Resources.Load("audio/AR16_bolt_cycle");
-        gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
         triggerClip = (AudioClip) Resources.Load("audio/AR16_trigger");
     }
 

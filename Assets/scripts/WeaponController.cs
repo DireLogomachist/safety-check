@@ -17,6 +17,7 @@ public class WeaponController : MonoBehaviour {
     protected Transform pivot;
     protected Transform canvas;
     protected AudioSource audio;
+    protected AudioClip gunshotClip;
     protected AudioClip rotateClip1;
     protected AudioClip rotateClip2;
     
@@ -24,6 +25,7 @@ public class WeaponController : MonoBehaviour {
         pivot = transform.Find("pivot");
         canvas = GameObject.Find("UICanvas").transform;
         audio = GetComponent<AudioSource>();
+        gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
         rotateClip1 = (AudioClip) Resources.Load("audio/rotate_swish_1");
         rotateClip2 = (AudioClip) Resources.Load("audio/rotate_swish_2");
         magAmmo = ammo - 1;

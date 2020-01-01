@@ -20,7 +20,6 @@ public class LKM45Controller : WeaponController {
     LineRenderer laserCore;
     LineRenderer laserBlur;
 
-    AudioClip gunshotClip;
     AudioClip laserButtonClip;
     AudioClip laserOnClip;
     AudioClip laserOffClip;
@@ -43,7 +42,6 @@ public class LKM45Controller : WeaponController {
         laserCore = pivot.Find("LKM45_laser_core").GetComponent<LineRenderer>();
         laserBlur = pivot.Find("LKM45_laser_blur").GetComponent<LineRenderer>();
 
-        gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
         laserButtonClip = (AudioClip) Resources.Load("audio/LKM45_laser_button");
         laserOnClip = (AudioClip) Resources.Load("audio/LKM45_laser_sight_on");
         laserOffClip = (AudioClip) Resources.Load("audio/LKM45_laser_sight_off");
