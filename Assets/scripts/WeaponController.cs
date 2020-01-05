@@ -108,7 +108,10 @@ public class WeaponController : MonoBehaviour {
     }
 
     protected void UpdateAmmoUI() {
-        GameObject.Find("AmmoText").GetComponent<Text>().text = "Ammo: " + ammo;
+        if(ammo >= 10)
+            GameObject.Find("AmmoText").GetComponent<Text>().text = "Ammo: " + ammo;
+        else
+            GameObject.Find("AmmoText").GetComponent<Text>().text = "Ammo:  " + ammo;
     }
 
     protected virtual IEnumerator Misfire() {
