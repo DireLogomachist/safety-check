@@ -13,8 +13,6 @@ public class MK68Controller : WeaponController {
         triggers[1].function.AddListener(Button);   // Button
         triggers[2].function.AddListener(Key);      // Key
         triggers[3].function.AddListener(Wire);     // Wire
-
-        StartCoroutine(LaunchSpoon());
     }
 
     public override void Update() {
@@ -26,7 +24,15 @@ public class MK68Controller : WeaponController {
     }
 
     IEnumerator PinAction() {
-        yield break;
+        inputFlag = true;
+        Debug.Log("Pulling pin");
+        GetComponent<Animator>().Play("MK68_pin");
+        StartCoroutine(LaunchSpoon());
+        yield return new WaitForSeconds(2.0f);
+        GetComponent<Animator>().Play("MK68_shell");
+        yield return new WaitForSeconds(4.0f);
+        GameObject.Destroy(pivot.Find("MK68_shell").gameObject);
+        inputFlag = false;
     }
 
     public void Button() {
@@ -34,6 +40,7 @@ public class MK68Controller : WeaponController {
     }
 
     IEnumerator ButtonAction() {
+        Debug.Log("Button pressed");
         yield break;
     }
 
@@ -42,6 +49,8 @@ public class MK68Controller : WeaponController {
     }
 
     IEnumerator KeyAction() {
+        Debug.Log("Key turned");
+        GetComponent<Animator>().Play("MK68_key");
         yield break;
     }
 
@@ -50,6 +59,11 @@ public class MK68Controller : WeaponController {
     }
 
     IEnumerator WireAction() {
+        Debug.Log("Wire cut");
+        pivot.Find("MK68_wire_red").gameObject.active = false;
+        pivot.Find("MK68_wire_trigger").gameObject.active = false;
+        pivot.Find("MK68_wire_red_cut").gameObject.active = true;
+        pivot.Find("MK68_wire_trigger_cut").gameObject.active = true;
         yield break;
     }
 
@@ -61,5 +75,13 @@ public class MK68Controller : WeaponController {
         inputFlag = true;
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
+    }
+
+    IEnumerator LaunchSpoon() {
+        GameObject spoon = pivot.Find("MK68_spoon").gameObject;
+        yield return new WaitForSeconds(1.0f);
+        spoon.transform.parent = null;
+        spoon.GetComponent<Rigidbody>().isKinematic = false;
+        spoon.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0,15,0), new Vector3(0,-1,0), ForceMode.Impulse);
     }
 }
