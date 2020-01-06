@@ -3,8 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using TMPro;
 
 public class MK68Controller : WeaponController {
+
+    public float timer = 20.0f;
+    TextMeshPro timerText;
+
+    bool countdownStarted = true;
+    float countdownSpeed = 1.0f;
 
     public override void Start() {
         base.Start();
@@ -13,10 +20,23 @@ public class MK68Controller : WeaponController {
         triggers[1].function.AddListener(Button);   // Button
         triggers[2].function.AddListener(Key);      // Key
         triggers[3].function.AddListener(Wire);     // Wire
+
+        timerText = pivot.Find("Timer").GetComponent<TextMeshPro>();
     }
 
     public override void Update() {
         base.Update();
+
+        if(countdownStarted) {
+            timer -= Time.deltaTime*countdownSpeed;
+            timerText.text = Mathf.CeilToInt(timer).ToString("00");
+
+            if(timer <= 0.0f) {
+                countdownStarted = false;
+                timerText.text = "00";
+                Fire();
+            }
+        }
     }
 
     public void Pin() {
@@ -33,14 +53,14 @@ public class MK68Controller : WeaponController {
         spoon.transform.parent = null;
         spoon.GetComponent<Rigidbody>().isKinematic = false;
         spoon.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0,15,0), new Vector3(0,-1,0), ForceMode.Impulse);
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.0f);
 
         GetComponent<Animator>().Play("MK68_shell");
         yield return new WaitForSeconds(4.0f);
 
-        GameObject.Destroy(pivot.Find("MK68_pin").gameObject);
-        GameObject.Destroy(pivot.Find("MK68_shell").gameObject);
-        GameObject.Destroy(GameObject.Find("MK68_spoon").gameObject);
+        pivot.Find("MK68_pin").gameObject.active = false;
+        pivot.Find("MK68_shell").gameObject.active = false;
+        GameObject.Find("MK68_spoon").gameObject.active = false;
         inputFlag = false;
     }
 
@@ -49,8 +69,11 @@ public class MK68Controller : WeaponController {
     }
 
     IEnumerator ButtonAction() {
+        inputFlag = true;
         Debug.Log("Button pressed");
-        yield break;
+        GetComponent<Animator>().Play("MK68_button");
+        yield return new WaitForSeconds(0.5f);
+        inputFlag = false;
     }
 
     public void Key() {
@@ -58,9 +81,11 @@ public class MK68Controller : WeaponController {
     }
 
     IEnumerator KeyAction() {
+        inputFlag = true;
         Debug.Log("Key turned");
         GetComponent<Animator>().Play("MK68_key");
-        yield break;
+        yield return new WaitForSeconds(0.5f);
+        inputFlag = false;
     }
 
     public void Wire() {
@@ -68,12 +93,14 @@ public class MK68Controller : WeaponController {
     }
 
     IEnumerator WireAction() {
+        inputFlag = true;
         Debug.Log("Wire cut");
         pivot.Find("MK68_wire_red").gameObject.active = false;
         pivot.Find("MK68_wire_trigger").gameObject.active = false;
         pivot.Find("MK68_wire_red_cut").gameObject.active = true;
         pivot.Find("MK68_wire_trigger_cut").gameObject.active = true;
-        yield break;
+        yield return new WaitForSeconds(0.5f);
+        inputFlag = false;
     }
 
     public void Fire() {
@@ -82,15 +109,8 @@ public class MK68Controller : WeaponController {
 
     IEnumerator FireAction() {
         inputFlag = true;
+        Debug.Log("BOOM");
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
-    }
-
-    IEnumerator LaunchSpoon() {
-        GameObject spoon = pivot.Find("MK68_spoon").gameObject;
-        yield return new WaitForSeconds(1.0f);
-        spoon.transform.parent = null;
-        spoon.GetComponent<Rigidbody>().isKinematic = false;
-        spoon.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0,15,0), new Vector3(0,-1,0), ForceMode.Impulse);
     }
 }
