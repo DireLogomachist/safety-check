@@ -27,11 +27,20 @@ public class MK68Controller : WeaponController {
         inputFlag = true;
         Debug.Log("Pulling pin");
         GetComponent<Animator>().Play("MK68_pin");
-        StartCoroutine(LaunchSpoon());
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
+
+        GameObject spoon = pivot.Find("MK68_spoon").gameObject;
+        spoon.transform.parent = null;
+        spoon.GetComponent<Rigidbody>().isKinematic = false;
+        spoon.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0,15,0), new Vector3(0,-1,0), ForceMode.Impulse);
+        yield return new WaitForSeconds(3.0f);
+
         GetComponent<Animator>().Play("MK68_shell");
         yield return new WaitForSeconds(4.0f);
+
+        GameObject.Destroy(pivot.Find("MK68_pin").gameObject);
         GameObject.Destroy(pivot.Find("MK68_shell").gameObject);
+        GameObject.Destroy(GameObject.Find("MK68_spoon").gameObject);
         inputFlag = false;
     }
 
