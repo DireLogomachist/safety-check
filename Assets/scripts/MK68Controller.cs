@@ -10,7 +10,7 @@ public class MK68Controller : WeaponController {
     public float timer = 20.0f;
     TextMeshPro timerText;
 
-    bool countdownStarted = true;
+    bool countdownStarted = false;
     float countdownSpeed = 1.0f;
 
     public override void Start() {
