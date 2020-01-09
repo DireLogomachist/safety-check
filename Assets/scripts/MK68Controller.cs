@@ -10,6 +10,9 @@ public class MK68Controller : WeaponController {
     public float timer = 20.0f;
     TextMeshPro timerText;
 
+    bool antennaUp = false;
+    bool pinPulled = false;
+
     bool countdownStarted = false;
     float countdownSpeed = 1.0f;
 
@@ -45,22 +48,25 @@ public class MK68Controller : WeaponController {
 
     IEnumerator PinAction() {
         inputFlag = true;
-        Debug.Log("Pulling pin");
-        GetComponent<Animator>().Play("MK68_pin");
-        yield return new WaitForSeconds(1.0f);
+        if(!pinPulled) {
+            pinPulled = true;
+            GetComponent<Animator>().Play("MK68_pin");
+            yield return new WaitForSeconds(1.0f);
 
-        GameObject spoon = pivot.Find("MK68_spoon").gameObject;
-        spoon.transform.parent = null;
-        spoon.GetComponent<Rigidbody>().isKinematic = false;
-        spoon.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0,15,0), new Vector3(0,-1,0), ForceMode.Impulse);
-        yield return new WaitForSeconds(2.0f);
+            GameObject spoon = pivot.Find("MK68_spoon").gameObject;
+            spoon.transform.parent = null;
+            spoon.GetComponent<Rigidbody>().isKinematic = false;
+            spoon.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0,15,0), new Vector3(0,-1,0), ForceMode.Impulse);
+            yield return new WaitForSeconds(2.0f);
 
-        GetComponent<Animator>().Play("MK68_shell");
-        yield return new WaitForSeconds(4.0f);
+            GetComponent<Animator>().Play("MK68_shell");
+            yield return new WaitForSeconds(4.0f);
 
-        pivot.Find("MK68_pin").gameObject.active = false;
-        pivot.Find("MK68_shell").gameObject.active = false;
-        GameObject.Find("MK68_spoon").gameObject.active = false;
+            pivot.Find("MK68_pin").gameObject.active = false;
+            pivot.Find("MK68_shell").gameObject.active = false;
+            GameObject.Find("MK68_spoon").gameObject.active = false;
+            countdownStarted = true;
+        }
         inputFlag = false;
     }
 
@@ -70,9 +76,9 @@ public class MK68Controller : WeaponController {
 
     IEnumerator ButtonAction() {
         inputFlag = true;
-        Debug.Log("Button pressed");
         GetComponent<Animator>().Play("MK68_button");
-        yield return new WaitForSeconds(0.5f);
+        if(!antennaUp) ExtendAntenna(); else RetractAntenna();
+        yield return new WaitForSeconds(1.0f);
         inputFlag = false;
     }
 
@@ -82,7 +88,6 @@ public class MK68Controller : WeaponController {
 
     IEnumerator KeyAction() {
         inputFlag = true;
-        Debug.Log("Key turned");
         GetComponent<Animator>().Play("MK68_key");
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
@@ -94,7 +99,6 @@ public class MK68Controller : WeaponController {
 
     IEnumerator WireAction() {
         inputFlag = true;
-        Debug.Log("Wire cut");
         pivot.Find("MK68_wire_red").gameObject.active = false;
         pivot.Find("MK68_wire_trigger").gameObject.active = false;
         pivot.Find("MK68_wire_red_cut").gameObject.active = true;
@@ -112,5 +116,29 @@ public class MK68Controller : WeaponController {
         Debug.Log("BOOM");
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
+    }
+
+    void ExtendAntenna() {
+        antennaUp = true;
+        AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
+        float curveTime = 0.6f;
+        Transform antennaHead = pivot.Find("MK68_antenna_head");
+        Transform antennaWire = pivot.Find("MK68_antenna_wire");
+        Vector3 headPos = antennaHead.localPosition;
+        Quaternion headRot = antennaHead.localRotation;
+        StartCoroutine(CurveLerp(antennaHead, headPos, headPos + new Vector3(0,0.7f,0), headRot, headRot, curve, curveTime));
+        StartCoroutine(CurveScaleLerp(antennaWire, antennaWire.localScale, new Vector3(1,13,1), curve, curveTime));
+    }
+
+    void RetractAntenna() {
+        antennaUp = false;
+        AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
+        float curveTime = 0.6f;
+        Transform antennaHead = pivot.Find("MK68_antenna_head");
+        Transform antennaWire = pivot.Find("MK68_antenna_wire");
+        Vector3 headPos = antennaHead.localPosition;
+        Quaternion headRot = antennaHead.localRotation;
+        StartCoroutine(CurveLerp(antennaHead, headPos, new Vector3(0,0,0), headRot, headRot, curve, curveTime));
+        StartCoroutine(CurveScaleLerp(antennaWire, antennaWire.localScale, new Vector3(1,1,1), curve, curveTime));
     }
 }

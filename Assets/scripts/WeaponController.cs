@@ -107,6 +107,17 @@ public class WeaponController : MonoBehaviour {
         transform.localRotation = endRot;
     }
 
+    protected IEnumerator CurveScaleLerp(Transform transform, Vector3 startScl, Vector3 endScl, AnimationCurve curve, float time) {
+        float elapsed = 0.0f;
+        while(elapsed < time) {
+            elapsed += Time.deltaTime;
+            transform.localScale = Vector3.LerpUnclamped(startScl, endScl, curve.Evaluate(elapsed/time));
+            yield return null;
+        }
+
+        transform.localScale = endScl;
+    }
+
     protected void UpdateAmmoUI() {
         if(ammo >= 10)
             GameObject.Find("AmmoText").GetComponent<Text>().text = "Ammo: " + ammo;
