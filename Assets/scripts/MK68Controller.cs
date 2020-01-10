@@ -7,11 +7,12 @@ using TMPro;
 
 public class MK68Controller : WeaponController {
 
-    public float timer = 20.0f;
+    public float timer = 30.0f;
     TextMeshPro timerText;
 
     bool antennaUp = false;
     bool pinPulled = false;
+    bool switchOn = false;
 
     bool countdownStarted = false;
     float countdownSpeed = 1.0f;
@@ -23,6 +24,7 @@ public class MK68Controller : WeaponController {
         triggers[1].function.AddListener(Button);   // Button
         triggers[2].function.AddListener(Key);      // Key
         triggers[3].function.AddListener(Wire);     // Wire
+        triggers[4].function.AddListener(Switch);   // Switch
 
         timerText = pivot.Find("Timer").GetComponent<TextMeshPro>();
     }
@@ -103,6 +105,23 @@ public class MK68Controller : WeaponController {
         pivot.Find("MK68_wire_trigger").gameObject.active = false;
         pivot.Find("MK68_wire_red_cut").gameObject.active = true;
         pivot.Find("MK68_wire_trigger_cut").gameObject.active = true;
+        yield return new WaitForSeconds(0.5f);
+        countdownSpeed = 1.5f;
+        inputFlag = false;
+    }
+
+    public void Switch() {
+        QueueInput(SwitchAction());
+    }
+
+    IEnumerator SwitchAction() {
+        inputFlag = true;
+        //AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
+        Transform swtch = pivot.Find("MK68_switch");
+        Vector3 pos = swtch.localPosition;
+        if(!switchOn) StartCoroutine(CurveLerp(swtch, pos, pos, swtch.localRotation, Quaternion.Euler(10,0,0), curve, 0.5f));
+        else StartCoroutine(CurveLerp(swtch, pos, pos, swtch.localRotation, Quaternion.Euler(-10,0,0), curve, 0.5f));
+        switchOn = !switchOn;
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
     }
