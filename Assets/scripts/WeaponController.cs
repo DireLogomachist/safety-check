@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class WeaponController : MonoBehaviour {
@@ -130,10 +131,11 @@ public class WeaponController : MonoBehaviour {
     }
 
     protected IEnumerator Safe() {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
         canvas.Find("PopupController").GetComponent<PopupController>().Spawn(1);
         yield return new WaitForSeconds(1.5f);
         //center screen popup plus effects
         //load next level
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

@@ -44,6 +44,8 @@
 
             fixed4 frag(v2f i) : SV_TARGET{
                 //scale the position to adjust for shader input and floor the values so we have whole numbers
+                i.worldPos.x  = i.worldPos.x - _Time.y/3;
+                i.worldPos.y  = i.worldPos.y + _Time.y/3;
                 float3 adjustedWorldPos = floor(i.worldPos / _Scale);
                 //add different dimensions 
                 float chessboard = adjustedWorldPos.x + adjustedWorldPos.y + adjustedWorldPos.z;
