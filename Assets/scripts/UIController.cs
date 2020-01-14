@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
+
+    public Animator transition;
+
     void Start() {
         WeaponController weapon = FindObjectsOfType<WeaponController>()[0];
 

@@ -21,6 +21,7 @@ public class WeaponController : MonoBehaviour {
     protected AudioClip gunshotClip;
     protected AudioClip rotateClip1;
     protected AudioClip rotateClip2;
+    protected AudioClip misfirePopupClip;
     
     public virtual void Start() {
         pivot = transform.Find("pivot");
@@ -29,6 +30,7 @@ public class WeaponController : MonoBehaviour {
         gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
         rotateClip1 = (AudioClip) Resources.Load("audio/rotate_swish_1");
         rotateClip2 = (AudioClip) Resources.Load("audio/rotate_swish_2");
+        misfirePopupClip = (AudioClip) Resources.Load("audio/ui_misfire_blip");
         magAmmo = ammo - 1;
         UpdateAmmoUI();
     }
@@ -135,7 +137,8 @@ public class WeaponController : MonoBehaviour {
         canvas.Find("PopupController").GetComponent<PopupController>().Spawn(1);
         yield return new WaitForSeconds(1.5f);
         //center screen popup plus effects
-        //load next level
+        canvas.GetComponent<UIController>().transition.SetTrigger("Start");
+        yield return new WaitForSeconds(3.0f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

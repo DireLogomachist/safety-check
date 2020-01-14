@@ -109,6 +109,7 @@ public class AR16Controller : WeaponController {
                 pivot.Find("mag").Find("round").gameObject.SetActive(false);
             yield return new WaitForSeconds(0.8f);
             canvas.Find("PopupController").GetComponent<PopupController>().Spawn(4);
+            audio.PlayOneShot(misfirePopupClip, 0.2f);
             if(ammo == 0)
                 StartCoroutine(Safe());
         }
