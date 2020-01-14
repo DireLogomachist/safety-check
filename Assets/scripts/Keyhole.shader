@@ -53,14 +53,15 @@
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 UNITY_TRANSFER_FOG(o,o.vertex);
-                o.color = v.color * _Color;
+                o.color = _Color;
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
                 float2 scaleCenter = float2(0.5, 0.5);
-                fixed4 col = i.color - tex2D(_MainTex, (i.uv - scaleCenter)/_TexScale + scaleCenter)*i.color;
+                float4 black = float4(1,1,1,1);
+                fixed4 col = _Color*(black - tex2D(_MainTex, (i.uv - scaleCenter)/_TexScale + scaleCenter)*i.color);
 
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
