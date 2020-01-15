@@ -27,6 +27,9 @@ public class MK68Controller : WeaponController {
         triggers[4].function.AddListener(Switch);   // Switch
 
         timerText = pivot.Find("Timer").GetComponent<TextMeshPro>();
+
+        canvas.Find("Weapon").Find("WeaponText").GetComponent<Text>().text = "MK68 Frag Grenade";
+        canvas.Find("Weapon").GetComponent<RectTransform>().sizeDelta = new Vector2(2770, 600);
     }
 
     public override void Update() {

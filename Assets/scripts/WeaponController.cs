@@ -47,6 +47,8 @@ public class WeaponController : MonoBehaviour {
             }
         }
 
+        KeyboardInput();
+
         if(ammo <= 0 && !safe) {
             // "Safe!" popup
             // disable input
@@ -119,6 +121,18 @@ public class WeaponController : MonoBehaviour {
         }
 
         transform.localScale = endScl;
+    }
+
+    protected void KeyboardInput() {
+        if((Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown("w"))||((Input.GetKey(KeyCode.UpArrow)||Input.GetKey("w"))&&inputFlag==false)) {
+            RotateUp();
+        } else if((Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKeyDown("d"))||((Input.GetKey(KeyCode.RightArrow)||Input.GetKey("d"))&&inputFlag==false)) {
+            RotateRight();
+        } else if((Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown("s"))||((Input.GetKey(KeyCode.DownArrow)||Input.GetKey("s"))&&inputFlag==false)) {
+            RotateDown();
+        } else if((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown("a"))||((Input.GetKey(KeyCode.LeftArrow)||Input.GetKey("a"))&&inputFlag==false)) {
+            RotateLeft();
+        }
     }
 
     protected void UpdateAmmoUI() {
