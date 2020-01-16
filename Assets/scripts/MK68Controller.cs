@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -94,6 +95,7 @@ public class MK68Controller : WeaponController {
     IEnumerator KeyAction() {
         inputFlag = true;
         GetComponent<Animator>().Play("MK68_key");
+        countdownSpeed = 1.5f;
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
     }
@@ -109,7 +111,11 @@ public class MK68Controller : WeaponController {
         pivot.Find("MK68_wire_red_cut").gameObject.active = true;
         pivot.Find("MK68_wire_trigger_cut").gameObject.active = true;
         yield return new WaitForSeconds(0.5f);
-        countdownSpeed = 1.5f;
+        canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
+        yield return new WaitForSeconds(2.0f);
+        canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
+        yield return new WaitForSeconds(3.0f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         inputFlag = false;
     }
 

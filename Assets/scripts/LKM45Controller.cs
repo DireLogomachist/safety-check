@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LKM45Controller : WeaponController {
@@ -137,13 +138,20 @@ public class LKM45Controller : WeaponController {
     IEnumerator FireAction() {
         inputFlag = true;
         GetComponent<Animator>().Play("LKM45_laser_button");
-       audio.PlayOneShot(laserButtonClip, 0.2f);
+        audio.PlayOneShot(laserButtonClip, 0.2f);
         if(ammo > 0) {
             GetComponent<Animator>().Play("LKM45_bolt");
             GetComponent<Animator>().Play("LKM45_recoil");
             StartCoroutine(Eject(casing, pivot.Find("ejection_firing_spawn")));
             StartCoroutine(MuzzleFlash());
             audio.PlayOneShot(gunshotClip, 1.0f);
+            if(Quaternion.Euler(transform.eulerAngles)*Vector3.right == -Vector3.forward) {
+                canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
+                yield return new WaitForSeconds(2.0f);
+                canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
+                yield return new WaitForSeconds(3.0f);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
             ammo -= 1;
             if(!magDropped) {
                 magAmmo = ammo - 1;
