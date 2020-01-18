@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour {
     Vector3 shakeOffset;
 	Vector3 shakeRot;
 	float shakeMaxRot = 0.4f;
-	float shakeMaxOffset = 0.02f;
+	float shakeMaxOffset = 0.1f;
 	
     
     void Start() {
@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour {
     void Update() {
     }
 
-    IEnumerator cameraShake() {
+    public IEnumerator CameraShake() {
         float elapsed = 0.0f;
         while(elapsed < shakeTime) {
             elapsed += Time.deltaTime;
@@ -40,8 +40,6 @@ public class CameraController : MonoBehaviour {
 		    transform.eulerAngles = transform.eulerAngles - shakeRot;
 			transform.position = transform.position + new Vector3(offsetX, offsetY, offsetZ);
 			transform.eulerAngles = transform.eulerAngles + new Vector3(yaw, pitch, roll);
-
-			//shakeIndex = Mathf.Clamp(shakeIndex - shakeFallspeed*Time.deltaTime, 0.0f, Mathf.Infinity);
 
 			shakeOffset = new Vector3(offsetX,offsetY,offsetZ);
 			shakeRot = new Vector3(yaw,pitch,roll);

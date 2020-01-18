@@ -150,7 +150,9 @@ public class WeaponController : MonoBehaviour {
         yield return new WaitForSeconds(1.0f);
         canvas.Find("PopupController").GetComponent<PopupController>().Spawn(1);
         yield return new WaitForSeconds(1.5f);
-        //center screen popup plus effects
+        canvas.Find("Win").GetComponent<CanvasGroup>().alpha = 1;
+        GameObject.Find("WinParticles").GetComponent<ParticleSystem>().Play();
+        yield return new WaitForSeconds(2.0f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
         yield return new WaitForSeconds(3.0f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

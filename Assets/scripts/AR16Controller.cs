@@ -102,6 +102,7 @@ public class AR16Controller : WeaponController {
             GetComponent<Animator>().Play("AR16_recoil");
             StartCoroutine(Eject(casing, pivot.Find("ejection_firing_spawn")));
             StartCoroutine(MuzzleFlash());
+            StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
             audio.PlayOneShot(gunshotClip, 1.0f);
             if(Quaternion.Euler(transform.eulerAngles)*Vector3.right == -Vector3.forward) {
                 canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");

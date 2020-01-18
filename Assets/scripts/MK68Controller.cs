@@ -142,6 +142,7 @@ public class MK68Controller : WeaponController {
     IEnumerator FireAction() {
         inputFlag = true;
         Debug.Log("BOOM");
+        StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
     }
