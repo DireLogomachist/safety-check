@@ -11,6 +11,8 @@ public class MenuController : MonoBehaviour {
     GameObject arrowRight;
     float arrowLeftOrigin;
     float arrowRightOrigin;
+    float menuOffset = 500;
+    float[] itemOffsets = new float[3];
     
     AudioSource audio;
     AudioClip menuBlip;
@@ -25,13 +27,17 @@ public class MenuController : MonoBehaviour {
         audio = GetComponent<AudioSource>();
         menuBlip = (AudioClip) Resources.Load("audio/ui_menu_blip");
         menuSelect = (AudioClip) Resources.Load("audio/ui_menu_blip");
+
+        itemOffsets[0] = 400;
+        itemOffsets[1] = 0;
+        itemOffsets[2] = 300;
     }
 
     void Update() {
-        float left = arrowLeftOrigin + 50*Mathf.Sin(Time.time*arrowSpeed);
-        float right = arrowRightOrigin - 50*Mathf.Sin(Time.time*arrowSpeed);
-        arrowLeft.GetComponent<RectTransform>().anchoredPosition = new Vector2(left,index*-600);
-        arrowRight.GetComponent<RectTransform>().anchoredPosition = new Vector2(right,index*-600);
+        float left = arrowLeftOrigin + itemOffsets[index] + 50*Mathf.Sin(Time.time*arrowSpeed);
+        float right = arrowRightOrigin - itemOffsets[index] - 50*Mathf.Sin(Time.time*arrowSpeed);
+        arrowLeft.GetComponent<RectTransform>().anchoredPosition = new Vector2(left,index*-menuOffset);
+        arrowRight.GetComponent<RectTransform>().anchoredPosition = new Vector2(right,index*-menuOffset);
 
         if(Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown("s")) {
             audio.PlayOneShot(menuBlip);
