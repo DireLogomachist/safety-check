@@ -55,9 +55,6 @@ public class LKM45Controller : WeaponController {
             laserCore.SetVertexCount(0);
             laserBlur.SetVertexCount(0);
         }
-
-        canvas.Find("Weapon").Find("WeaponText").GetComponent<Text>().text = "LKM45 Light Machine Gun";
-        canvas.Find("Weapon").GetComponent<RectTransform>().sizeDelta = new Vector2(3550, 600);
     }
 
     public override void Update() {

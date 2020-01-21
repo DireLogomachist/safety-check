@@ -1947,7 +1947,7 @@ MonoBehaviour:
   ammo: 1
   magAmmo: 0
   safe: 0
-  timer: 20
+  timer: 30
 --- !u!1001 &1105590364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3081,6 +3081,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5070248620686866059, guid: 54f1e2caaab09e04487bcbd2346d5db7,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 2770
+      objectReference: {fileID: 0}
+    - target: {fileID: 3221637496564168079, guid: 54f1e2caaab09e04487bcbd2346d5db7,
+        type: 3}
+      propertyPath: m_Text
+      value: MK68 Frag Grenade
       objectReference: {fileID: 0}
     - target: {fileID: 8620076248879995681, guid: 54f1e2caaab09e04487bcbd2346d5db7,
         type: 3}

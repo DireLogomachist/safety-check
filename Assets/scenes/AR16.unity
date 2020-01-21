@@ -1687,6 +1687,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: RotateRight
       objectReference: {fileID: 0}
+    - target: {fileID: 5070248620686866059, guid: 54f1e2caaab09e04487bcbd2346d5db7,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 2610
+      objectReference: {fileID: 0}
+    - target: {fileID: 3221637496564168079, guid: 54f1e2caaab09e04487bcbd2346d5db7,
+        type: 3}
+      propertyPath: m_Text
+      value: AR16 Assault Rifle
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54f1e2caaab09e04487bcbd2346d5db7, type: 3}
 --- !u!1 &1178655552

@@ -31,9 +31,6 @@ public class AR16Controller : WeaponController {
         selectorDownClip = (AudioClip) Resources.Load("audio/AR16_switch_2");
         boltCycleClip = (AudioClip) Resources.Load("audio/AR16_bolt_cycle");
         triggerClip = (AudioClip) Resources.Load("audio/AR16_trigger");
-
-        canvas.Find("Weapon").Find("WeaponText").GetComponent<Text>().text = "AR16 Assault Rifle";
-        canvas.Find("Weapon").GetComponent<RectTransform>().sizeDelta = new Vector2(2610, 600);
     }
 
     public override void Update() {

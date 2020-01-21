@@ -17,6 +17,11 @@ public class MK68Controller : WeaponController {
 
     bool countdownStarted = false;
     float countdownSpeed = 1.0f;
+    float beepTimer = 1.0f;
+
+    AudioClip countdownBeep1;
+    AudioClip countdownBeep2;
+    AudioClip countdownBeepEnd;
 
     public override void Start() {
         base.Start();
@@ -28,9 +33,10 @@ public class MK68Controller : WeaponController {
         triggers[4].function.AddListener(Switch);   // Switch
 
         timerText = pivot.Find("Timer").GetComponent<TextMeshPro>();
-
-        canvas.Find("Weapon").Find("WeaponText").GetComponent<Text>().text = "MK68 Frag Grenade";
-        canvas.Find("Weapon").GetComponent<RectTransform>().sizeDelta = new Vector2(2770, 600);
+        timerText.text = Mathf.CeilToInt(timer).ToString("00");
+        countdownBeep1 = (AudioClip) Resources.Load("audio/countdown_beep_1");
+        countdownBeep2 = (AudioClip) Resources.Load("audio/countdown_beep_2");
+        countdownBeepEnd = (AudioClip) Resources.Load("audio/countdown_beep_end");
     }
 
     public override void Update() {
@@ -40,9 +46,16 @@ public class MK68Controller : WeaponController {
             timer -= Time.deltaTime*countdownSpeed;
             timerText.text = Mathf.CeilToInt(timer).ToString("00");
 
+            if(Time.time > beepTimer && timer > 0.0f) {
+                if(countdownSpeed <= 1.0f)audio.PlayOneShot(countdownBeep1);
+                else audio.PlayOneShot(countdownBeep2);
+                beepTimer += 1.0f/countdownSpeed;
+            }
+
             if(timer <= 0.0f) {
                 countdownStarted = false;
                 timerText.text = "00";
+                audio.PlayOneShot(countdownBeepEnd);
                 Fire();
             }
         }
@@ -71,6 +84,7 @@ public class MK68Controller : WeaponController {
             pivot.Find("MK68_pin").gameObject.active = false;
             pivot.Find("MK68_shell").gameObject.active = false;
             GameObject.Find("MK68_spoon").gameObject.active = false;
+            beepTimer = Time.time + 1.0f;
             countdownStarted = true;
         }
         inputFlag = false;
