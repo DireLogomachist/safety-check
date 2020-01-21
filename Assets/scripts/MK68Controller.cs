@@ -22,6 +22,8 @@ public class MK68Controller : WeaponController {
     AudioClip countdownBeep1;
     AudioClip countdownBeep2;
     AudioClip countdownBeepEnd;
+    AudioClip keyTurn;
+    AudioClip wireCut;
 
     public override void Start() {
         base.Start();
@@ -37,6 +39,8 @@ public class MK68Controller : WeaponController {
         countdownBeep1 = (AudioClip) Resources.Load("audio/countdown_beep_1");
         countdownBeep2 = (AudioClip) Resources.Load("audio/countdown_beep_2");
         countdownBeepEnd = (AudioClip) Resources.Load("audio/countdown_beep_end");
+        keyTurn = (AudioClip) Resources.Load("audio/MK68_key_turn");
+        wireCut = (AudioClip) Resources.Load("audio/MK68_wire_cut");
     }
 
     public override void Update() {
@@ -47,7 +51,7 @@ public class MK68Controller : WeaponController {
             timerText.text = Mathf.CeilToInt(timer).ToString("00");
 
             if(Time.time > beepTimer && timer > 0.0f) {
-                if(countdownSpeed <= 1.0f)audio.PlayOneShot(countdownBeep1);
+                if(countdownSpeed <= 1.0f) audio.PlayOneShot(countdownBeep1);
                 else audio.PlayOneShot(countdownBeep2);
                 beepTimer += 1.0f/countdownSpeed;
             }
@@ -108,9 +112,13 @@ public class MK68Controller : WeaponController {
 
     IEnumerator KeyAction() {
         inputFlag = true;
-        GetComponent<Animator>().Play("MK68_key");
-        countdownSpeed = 1.5f;
-        yield return new WaitForSeconds(0.5f);
+        if(countdownSpeed <= 1.0f) {
+            GetComponent<Animator>().Play("MK68_key");
+            yield return new WaitForSeconds(0.2f);
+            audio.PlayOneShot(keyTurn);
+            countdownSpeed = 1.5f;
+            yield return new WaitForSeconds(0.5f);
+        }
         inputFlag = false;
     }
 
@@ -120,11 +128,13 @@ public class MK68Controller : WeaponController {
 
     IEnumerator WireAction() {
         inputFlag = true;
+        audio.PlayOneShot(wireCut);
+        yield return new WaitForSeconds(0.15f);
         pivot.Find("MK68_wire_red").gameObject.active = false;
         pivot.Find("MK68_wire_trigger").gameObject.active = false;
         pivot.Find("MK68_wire_red_cut").gameObject.active = true;
         pivot.Find("MK68_wire_trigger_cut").gameObject.active = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.75f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
         yield return new WaitForSeconds(2.0f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
