@@ -45,7 +45,7 @@ public class MenuController : MonoBehaviour {
         levelOffsets[2] = 70;
         levelOffsets[3] = 70;
         creditsOffsets[0] = -70;
-        creditsOffsets[1] = -70;
+        creditsOffsets[1] = -120;
         creditsOffsets[2] = 70;
     }
 

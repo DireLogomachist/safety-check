@@ -18,7 +18,12 @@ public class WeaponController : MonoBehaviour {
     protected Transform pivot;
     protected Transform canvas;
     protected AudioSource audio;
+
+    protected AudioClip casingEject1Clip;
+    protected AudioClip casingEject2Clip;
+    protected AudioClip casingEject3Clip;
     protected AudioClip gunshotClip;
+    protected AudioClip levelWinClip;
     protected AudioClip rotateClip1;
     protected AudioClip rotateClip2;
     protected AudioClip misfirePopupClip;
@@ -27,7 +32,11 @@ public class WeaponController : MonoBehaviour {
         pivot = transform.Find("pivot");
         canvas = GameObject.Find("UICanvas").transform;
         audio = GetComponent<AudioSource>();
-        gunshotClip = (AudioClip) Resources.Load("audio/gunshot");
+        casingEject1Clip = (AudioClip) Resources.Load("audio/casing_eject_3");
+        casingEject2Clip = (AudioClip) Resources.Load("audio/casing_eject_3");
+        casingEject3Clip = (AudioClip) Resources.Load("audio/casing_eject_3");
+        gunshotClip = (AudioClip) Resources.Load("audio/gunshot_ringing");
+        levelWinClip = (AudioClip) Resources.Load("audio/level_win");
         rotateClip1 = (AudioClip) Resources.Load("audio/rotate_swish_1");
         rotateClip2 = (AudioClip) Resources.Load("audio/rotate_swish_2");
         misfirePopupClip = (AudioClip) Resources.Load("audio/ui_misfire_blip");
@@ -152,9 +161,18 @@ public class WeaponController : MonoBehaviour {
         yield return new WaitForSeconds(1.5f);
         canvas.Find("Win").GetComponent<CanvasGroup>().alpha = 1;
         GameObject.Find("WinParticles").GetComponent<ParticleSystem>().Play();
-        yield return new WaitForSeconds(2.0f);
+        audio.PlayOneShot(levelWinClip, 0.4f);
+        yield return new WaitForSeconds(2.5f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
         yield return new WaitForSeconds(3.0f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    protected IEnumerator PlayCaseEjectAudio() {
+        yield return new WaitForSeconds(0.15f);
+        float rand = Random.Range(0.0f, 1.0f);
+        if(rand < 0.33f) audio.PlayOneShot(casingEject1Clip, 0.5f);
+        else if(rand > 0.76f) audio.PlayOneShot(casingEject2Clip, 0.5f);
+        else audio.PlayOneShot(casingEject3Clip, 0.5f);
     }
 }

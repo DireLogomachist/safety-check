@@ -96,10 +96,7 @@ public class LKM45Controller : WeaponController {
         MagReleaseToggle();
         if(ammo > 0) {
             StartCoroutine(Eject(round, pivot.Find("ejection_cycling_spawn")));
-            float rand = Random.Range(0.0f,1.0f);
-            if(rand < 0.33f) audio.PlayOneShot(casingEject1Clip, 1.0f);
-            else if(rand > 0.76f) audio.PlayOneShot(casingEject2Clip, 1.0f);
-            else audio.PlayOneShot(casingEject3Clip, 1.0f);
+            StartCoroutine(PlayCaseEjectAudio());
             ammo -= 1;
             if(!magDropped) {
                 magAmmo = ammo - 1;

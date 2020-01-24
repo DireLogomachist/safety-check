@@ -71,6 +71,7 @@ public class AR16Controller : WeaponController {
         
         if(ammo > 0) {
             StartCoroutine(Eject(round, pivot.Find("ejection_cycling_spawn")));
+            StartCoroutine(PlayCaseEjectAudio());
             ammo -= 1;
             if(!magDropped) {
                 magAmmo = ammo - 1;
