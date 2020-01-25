@@ -136,6 +136,7 @@ public class MenuController : MonoBehaviour {
     }
 
     IEnumerator LevelLoad(int index) {
+        StartCoroutine(Camera.main.GetComponent<CameraController>().MusicFadeOut());
         canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
         yield return new WaitForSeconds(3.0f);
         SceneManager.LoadScene(index);

@@ -103,11 +103,14 @@ public class AR16Controller : WeaponController {
             StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
             audio.PlayOneShot(gunshotClip, 1.0f);
             if(Quaternion.Euler(transform.eulerAngles)*Vector3.right == -Vector3.forward) {
+                camCon.MusicMute();
                 canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
                 yield return new WaitForSeconds(2.0f);
                 canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
                 yield return new WaitForSeconds(3.0f);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            } else {
+                StartCoroutine(camCon.MusicTempMute());
             }
             ammo -= 1;
             if(!magDropped) {

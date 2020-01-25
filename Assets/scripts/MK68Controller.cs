@@ -135,12 +135,9 @@ public class MK68Controller : WeaponController {
         pivot.Find("MK68_wire_red_cut").gameObject.active = true;
         pivot.Find("MK68_wire_trigger_cut").gameObject.active = true;
         yield return new WaitForSeconds(0.75f);
-        canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
-        yield return new WaitForSeconds(2.0f);
-        canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
-        yield return new WaitForSeconds(3.0f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        inputFlag = false;
+        timer = 0.0f;
+        yield return new WaitForSeconds(1.0f);
+        StartCoroutine(FireAction());
     }
 
     public void Switch() {
@@ -166,8 +163,13 @@ public class MK68Controller : WeaponController {
     IEnumerator FireAction() {
         inputFlag = true;
         Debug.Log("BOOM");
+        camCon.MusicMute();
+        canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
         StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(4.0f);
+        canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
+        yield return new WaitForSeconds(3.0f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         inputFlag = false;
     }
 
