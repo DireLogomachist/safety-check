@@ -21,11 +21,13 @@ public class LKM45Controller : WeaponController {
     LineRenderer laserCore;
     LineRenderer laserBlur;
 
+    AudioClip boltCycleClip;
     AudioClip laserButtonClip;
     AudioClip laserOnClip;
     AudioClip laserOffClip;
     AudioClip selectorDownClip;
     AudioClip selectorUpClip;
+    AudioClip stockClip;
     AudioClip stockSwitchClip;
     AudioClip triggerClip;
 
@@ -43,11 +45,13 @@ public class LKM45Controller : WeaponController {
         laserCore = pivot.Find("LKM45_laser_core").GetComponent<LineRenderer>();
         laserBlur = pivot.Find("LKM45_laser_blur").GetComponent<LineRenderer>();
 
+        boltCycleClip = (AudioClip) Resources.Load("audio/AR16_bolt_cycle");
         laserButtonClip = (AudioClip) Resources.Load("audio/LKM45_laser_button");
         laserOnClip = (AudioClip) Resources.Load("audio/LKM45_laser_sight_on");
         laserOffClip = (AudioClip) Resources.Load("audio/LKM45_laser_sight_off");
         selectorDownClip = (AudioClip) Resources.Load("audio/LKM45_selector_down");
         selectorUpClip = (AudioClip) Resources.Load("audio/LKM45_selector_up");
+        stockClip = (AudioClip) Resources.Load("audio/LKM45_stock");
         stockSwitchClip = (AudioClip) Resources.Load("audio/LKM45_stock_switch");
         triggerClip = (AudioClip) Resources.Load("audio/LKM45_trigger");
         
@@ -93,6 +97,7 @@ public class LKM45Controller : WeaponController {
     IEnumerator CycleActionAction() {
         inputFlag = true;
         GetComponent<Animator>().Play("LKM45_bolt");
+        audio.PlayOneShot(boltCycleClip, 0.1f);
         MagReleaseToggle();
         if(ammo > 0) {
             StartCoroutine(Eject(round, pivot.Find("ejection_cycling_spawn")));
@@ -230,6 +235,8 @@ public class LKM45Controller : WeaponController {
 
     IEnumerator FoldStockAction() {
         inputFlag = true;
+        audio.PlayOneShot(boltCycleClip, 0.08f);
+        audio.PlayOneShot(stockClip, 1.0f);
         GetComponent<Animator>().Play("LKM45_bolt");
         ToggleStock();
         yield return new WaitForSeconds(0.8f);

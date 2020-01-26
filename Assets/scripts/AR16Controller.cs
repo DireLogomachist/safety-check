@@ -67,7 +67,7 @@ public class AR16Controller : WeaponController {
         inputFlag = true;
         GetComponent<Animator>().Play("AR16_charging_handle");
         GetComponent<Animator>().Play("AR16_bolt");
-        GetComponent<AudioSource>().PlayOneShot(boltCycleClip, 0.1f);
+        audio.PlayOneShot(boltCycleClip, 0.1f);
         
         if(ammo > 0) {
             StartCoroutine(Eject(round, pivot.Find("ejection_cycling_spawn")));
@@ -159,10 +159,10 @@ public class AR16Controller : WeaponController {
         Vector3 pos = selector.localPosition;
         if(!selectorUp) {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*selector.localRotation, toggleCurve, 0.4f));
-            GetComponent<AudioSource>().PlayOneShot(selectorUpClip, 0.1f);
+            audio.PlayOneShot(selectorUpClip, 0.1f);
         } else {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*selector.localRotation, toggleCurve, 0.4f));
-            GetComponent<AudioSource>().PlayOneShot(selectorDownClip, 0.1f);
+            audio.PlayOneShot(selectorDownClip, 0.1f);
         }
         selectorUp = !selectorUp;
     }

@@ -19,6 +19,8 @@ public class MK68Controller : WeaponController {
     float countdownSpeed = 1.0f;
     float beepTimer = 1.0f;
 
+    AudioClip antennaRetract;
+    AudioClip antennaExtend;
     AudioClip countdownBeep1;
     AudioClip countdownBeep2;
     AudioClip countdownBeepEnd;
@@ -36,6 +38,8 @@ public class MK68Controller : WeaponController {
 
         timerText = pivot.Find("Timer").GetComponent<TextMeshPro>();
         timerText.text = Mathf.CeilToInt(timer).ToString("00");
+        antennaRetract = (AudioClip) Resources.Load("audio/MK68_antenna_down");
+        antennaExtend = (AudioClip) Resources.Load("audio/MK68_antenna_up");
         countdownBeep1 = (AudioClip) Resources.Load("audio/countdown_beep_1");
         countdownBeep2 = (AudioClip) Resources.Load("audio/countdown_beep_2");
         countdownBeepEnd = (AudioClip) Resources.Load("audio/countdown_beep_end");
@@ -175,6 +179,7 @@ public class MK68Controller : WeaponController {
 
     void ExtendAntenna() {
         antennaUp = true;
+        audio.PlayOneShot(antennaExtend, 0.4f);
         AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
         float curveTime = 0.6f;
         Transform antennaHead = pivot.Find("MK68_antenna_head");
@@ -187,6 +192,7 @@ public class MK68Controller : WeaponController {
 
     void RetractAntenna() {
         antennaUp = false;
+        audio.PlayOneShot(antennaRetract, 0.4f);
         AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
         float curveTime = 0.6f;
         Transform antennaHead = pivot.Find("MK68_antenna_head");
