@@ -21,6 +21,7 @@ public class MK68Controller : WeaponController {
 
     AudioClip antennaRetract;
     AudioClip antennaExtend;
+    AudioClip button;
     AudioClip countdownBeep1;
     AudioClip countdownBeep2;
     AudioClip countdownBeepEnd;
@@ -40,6 +41,7 @@ public class MK68Controller : WeaponController {
         timerText.text = Mathf.CeilToInt(timer).ToString("00");
         antennaRetract = (AudioClip) Resources.Load("audio/MK68_antenna_down");
         antennaExtend = (AudioClip) Resources.Load("audio/MK68_antenna_up");
+        button = (AudioClip) Resources.Load("audio/MK68_button");
         countdownBeep1 = (AudioClip) Resources.Load("audio/countdown_beep_1");
         countdownBeep2 = (AudioClip) Resources.Load("audio/countdown_beep_2");
         countdownBeepEnd = (AudioClip) Resources.Load("audio/countdown_beep_end");
@@ -105,7 +107,9 @@ public class MK68Controller : WeaponController {
     IEnumerator ButtonAction() {
         inputFlag = true;
         GetComponent<Animator>().Play("MK68_button");
-        if(!antennaUp) ExtendAntenna(); else RetractAntenna();
+        audio.PlayOneShot(button, 0.5f);
+        if(!antennaUp) StartCoroutine(ExtendAntenna());
+        else StartCoroutine(RetractAntenna());
         yield return new WaitForSeconds(1.0f);
         inputFlag = false;
     }
@@ -177,7 +181,8 @@ public class MK68Controller : WeaponController {
         inputFlag = false;
     }
 
-    void ExtendAntenna() {
+    IEnumerator ExtendAntenna() {
+        yield return new WaitForSeconds(0.2f);
         antennaUp = true;
         audio.PlayOneShot(antennaExtend, 0.4f);
         AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
@@ -190,7 +195,8 @@ public class MK68Controller : WeaponController {
         StartCoroutine(CurveScaleLerp(antennaWire, antennaWire.localScale, new Vector3(1,13,1), curve, curveTime));
     }
 
-    void RetractAntenna() {
+    IEnumerator RetractAntenna() {
+        yield return new WaitForSeconds(0.2f);
         antennaUp = false;
         audio.PlayOneShot(antennaRetract, 0.4f);
         AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
