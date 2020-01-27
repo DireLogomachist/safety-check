@@ -147,6 +147,7 @@ public class LKM45Controller : WeaponController {
             audio.PlayOneShot(gunshotClip, 1.0f);
             if(Quaternion.Euler(transform.eulerAngles)*Vector3.right == -Vector3.forward) {
                 camCon.MusicMute();
+                audio.PlayOneShot(impactClip, 2.0f);
                 canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
                 yield return new WaitForSeconds(2.0f);
                 canvas.GetComponent<UIController>().transition.SetTrigger("Transition");

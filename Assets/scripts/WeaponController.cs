@@ -25,6 +25,7 @@ public class WeaponController : MonoBehaviour {
     protected AudioClip casingEject3Clip;
     protected AudioClip gunshotClip;
     protected AudioClip levelWinClip;
+    protected AudioClip impactClip;
     protected AudioClip rotateClip1;
     protected AudioClip rotateClip2;
     protected AudioClip misfirePopupClip;
@@ -39,6 +40,7 @@ public class WeaponController : MonoBehaviour {
         casingEject3Clip = (AudioClip) Resources.Load("audio/casing_eject_3");
         gunshotClip = (AudioClip) Resources.Load("audio/gunshot_ringing");
         levelWinClip = (AudioClip) Resources.Load("audio/level_win");
+        impactClip = (AudioClip) Resources.Load("audio/impact");
         rotateClip1 = (AudioClip) Resources.Load("audio/rotate_swish_1");
         rotateClip2 = (AudioClip) Resources.Load("audio/rotate_swish_2");
         misfirePopupClip = (AudioClip) Resources.Load("audio/ui_misfire_blip");

@@ -26,6 +26,7 @@ public class MK68Controller : WeaponController {
     AudioClip countdownBeep2;
     AudioClip countdownBeepEnd;
     AudioClip keyTurn;
+    AudioClip spoon;
     AudioClip wireCut;
 
     public override void Start() {
@@ -46,6 +47,7 @@ public class MK68Controller : WeaponController {
         countdownBeep2 = (AudioClip) Resources.Load("audio/countdown_beep_2");
         countdownBeepEnd = (AudioClip) Resources.Load("audio/countdown_beep_end");
         keyTurn = (AudioClip) Resources.Load("audio/MK68_key_turn");
+        spoon = (AudioClip) Resources.Load("audio/MK68_spoon");
         wireCut = (AudioClip) Resources.Load("audio/MK68_wire_cut");
     }
 
@@ -57,15 +59,15 @@ public class MK68Controller : WeaponController {
             timerText.text = Mathf.CeilToInt(timer).ToString("00");
 
             if(Time.time > beepTimer && timer > 0.0f) {
-                if(countdownSpeed <= 1.0f) audio.PlayOneShot(countdownBeep1);
-                else audio.PlayOneShot(countdownBeep2);
+                if(countdownSpeed <= 1.0f) audio.PlayOneShot(countdownBeep1, 0.7f);
+                else audio.PlayOneShot(countdownBeep2, 0.7f);
                 beepTimer += 1.0f/countdownSpeed;
             }
 
             if(timer <= 0.0f) {
                 countdownStarted = false;
                 timerText.text = "00";
-                audio.PlayOneShot(countdownBeepEnd);
+                audio.PlayOneShot(countdownBeepEnd, 0.8f);
                 Fire();
             }
         }
@@ -82,10 +84,11 @@ public class MK68Controller : WeaponController {
             GetComponent<Animator>().Play("MK68_pin");
             yield return new WaitForSeconds(1.0f);
 
-            GameObject spoon = pivot.Find("MK68_spoon").gameObject;
-            spoon.transform.parent = null;
-            spoon.GetComponent<Rigidbody>().isKinematic = false;
-            spoon.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0,15,0), new Vector3(0,-1,0), ForceMode.Impulse);
+            audio.PlayOneShot(spoon, 1.0f);
+            GameObject spoonObj = pivot.Find("MK68_spoon").gameObject;
+            spoonObj.transform.parent = null;
+            spoonObj.GetComponent<Rigidbody>().isKinematic = false;
+            spoonObj.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0,15,0), new Vector3(0,-1,0), ForceMode.Impulse);
             yield return new WaitForSeconds(2.0f);
 
             GetComponent<Animator>().Play("MK68_shell");
@@ -93,7 +96,7 @@ public class MK68Controller : WeaponController {
 
             pivot.Find("MK68_pin").gameObject.active = false;
             pivot.Find("MK68_shell").gameObject.active = false;
-            GameObject.Find("MK68_spoon").gameObject.active = false;
+            spoonObj.active = false;
             beepTimer = Time.time + 1.0f;
             countdownStarted = true;
         }
@@ -172,6 +175,7 @@ public class MK68Controller : WeaponController {
         inputFlag = true;
         Debug.Log("BOOM");
         camCon.MusicMute();
+        audio.PlayOneShot(impactClip, 2.0f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
         StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
         yield return new WaitForSeconds(4.0f);

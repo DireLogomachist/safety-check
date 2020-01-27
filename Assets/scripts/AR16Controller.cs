@@ -17,6 +17,8 @@ public class AR16Controller : WeaponController {
     AudioClip boltCycleClip;
     AudioClip selectorUpClip;
     AudioClip selectorDownClip;
+    AudioClip sightsUpClip;
+    AudioClip sightsDownClip;
     AudioClip triggerClip;
 
     public override void Start() {
@@ -27,9 +29,11 @@ public class AR16Controller : WeaponController {
         triggers[2].function.AddListener(Fire);            // Mag Release
         triggers[3].function.AddListener(MagToggle);       // Selector
 
+        boltCycleClip = (AudioClip) Resources.Load("audio/AR16_bolt_cycle");
         selectorUpClip = (AudioClip) Resources.Load("audio/AR16_switch_1");
         selectorDownClip = (AudioClip) Resources.Load("audio/AR16_switch_2");
-        boltCycleClip = (AudioClip) Resources.Load("audio/AR16_bolt_cycle");
+        sightsUpClip = (AudioClip) Resources.Load("audio/AR16_sights_up");
+        sightsDownClip = (AudioClip) Resources.Load("audio/AR16_sights_down");
         triggerClip = (AudioClip) Resources.Load("audio/AR16_trigger");
     }
 
@@ -104,6 +108,7 @@ public class AR16Controller : WeaponController {
             audio.PlayOneShot(gunshotClip, 1.0f);
             if(Quaternion.Euler(transform.eulerAngles)*Vector3.right == -Vector3.forward) {
                 camCon.MusicMute();
+                audio.PlayOneShot(impactClip, 2.0f);
                 canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
                 yield return new WaitForSeconds(2.0f);
                 canvas.GetComponent<UIController>().transition.SetTrigger("Transition");
@@ -140,11 +145,13 @@ public class AR16Controller : WeaponController {
         Transform front = pivot.Find("sight_full_front").Find("sight_front");
         Transform back = pivot.Find("sight_full_rear").Find("sight_back");
         GetComponent<Animator>().Play("AR16_trigger");
-        audio.PlayOneShot(triggerClip, 0.1f);
+        //audio.PlayOneShot(triggerClip, 0.05f);
         if(!sightsUp) {
+            audio.PlayOneShot(sightsUpClip, 0.4f);
             StartCoroutine(CurveLerp(front, front.localPosition, front.localPosition, front.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*front.localRotation, toggleCurve, 0.4f));
             StartCoroutine(CurveLerp(back, back.localPosition, back.localPosition, back.localRotation, Quaternion.Euler(new Vector3(0, 0, -90))*back.localRotation, toggleCurve, 0.4f));
         } else {
+            audio.PlayOneShot(sightsDownClip, 0.4f);
             StartCoroutine(CurveLerp(front, front.localPosition, front.localPosition, front.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*front.localRotation, toggleCurve, 0.4f));
             StartCoroutine(CurveLerp(back, back.localPosition, back.localPosition, back.localRotation, Quaternion.Euler(new Vector3(0, 0, 90))*back.localRotation, toggleCurve, 0.4f));
         }
