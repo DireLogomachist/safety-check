@@ -25,6 +25,7 @@ public class MK68Controller : WeaponController {
     AudioClip countdownBeep1;
     AudioClip countdownBeep2;
     AudioClip countdownBeepEnd;
+    AudioClip explosion;
     AudioClip keyTurn;
     AudioClip spoon;
     AudioClip wireCut;
@@ -46,6 +47,7 @@ public class MK68Controller : WeaponController {
         countdownBeep1 = (AudioClip) Resources.Load("audio/countdown_beep_1");
         countdownBeep2 = (AudioClip) Resources.Load("audio/countdown_beep_2");
         countdownBeepEnd = (AudioClip) Resources.Load("audio/countdown_beep_end");
+        explosion = (AudioClip) Resources.Load("audio/MK68_explosion");
         keyTurn = (AudioClip) Resources.Load("audio/MK68_key_turn");
         spoon = (AudioClip) Resources.Load("audio/MK68_spoon");
         wireCut = (AudioClip) Resources.Load("audio/MK68_wire_cut");
@@ -173,8 +175,8 @@ public class MK68Controller : WeaponController {
 
     IEnumerator FireAction() {
         inputFlag = true;
-        Debug.Log("BOOM");
         camCon.MusicMute();
+        audio.PlayOneShot(explosion, 1.0f);
         audio.PlayOneShot(impactClip, 2.0f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
         StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
