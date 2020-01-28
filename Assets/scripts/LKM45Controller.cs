@@ -266,7 +266,7 @@ public class LKM45Controller : WeaponController {
             StartCoroutine(CurveLerp(selector, pos, pos, selector.localRotation, Quaternion.Euler(new Vector3(0, -0, 100))*selector.localRotation, toggleCurve, 0.3f));
         }
         stockSwitchDown = !stockSwitchDown;
-        audio.PlayOneShot(stockSwitchClip, 0.1f);
+        audio.PlayOneShot(stockSwitchClip, 0.2f);
     }
 
     public void DustCover() {

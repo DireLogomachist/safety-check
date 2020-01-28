@@ -27,6 +27,7 @@ public class MK68Controller : WeaponController {
     AudioClip countdownBeepEnd;
     AudioClip explosion;
     AudioClip keyTurn;
+    AudioClip pin;
     AudioClip spoon;
     AudioClip wireCut;
 
@@ -49,6 +50,7 @@ public class MK68Controller : WeaponController {
         countdownBeepEnd = (AudioClip) Resources.Load("audio/countdown_beep_end");
         explosion = (AudioClip) Resources.Load("audio/MK68_explosion");
         keyTurn = (AudioClip) Resources.Load("audio/MK68_key_turn");
+        pin = (AudioClip) Resources.Load("audio/MK68_pin");
         spoon = (AudioClip) Resources.Load("audio/MK68_spoon");
         wireCut = (AudioClip) Resources.Load("audio/MK68_wire_cut");
     }
@@ -83,6 +85,7 @@ public class MK68Controller : WeaponController {
         inputFlag = true;
         if(!pinPulled) {
             pinPulled = true;
+            audio.PlayOneShot(pin, 0.8f);
             GetComponent<Animator>().Play("MK68_pin");
             yield return new WaitForSeconds(1.0f);
 
