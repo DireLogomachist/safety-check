@@ -41,7 +41,8 @@ public class PopupController : MonoBehaviour {
         } else {
             popup = GameObject.Instantiate(MisfirePopup);
         }
-        popup.transform.parent = transform;
+        popup.transform.SetParent(transform, false);
+
         if(newestPopup == null) {
             popup.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
         } else {

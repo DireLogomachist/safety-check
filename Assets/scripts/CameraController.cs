@@ -24,6 +24,9 @@ public class CameraController : MonoBehaviour {
     }
 
     void Update() {
+        if(Input.GetKeyDown("f")) {
+            Screen.fullScreen = !Screen.fullScreen;
+        }
     }
 
     public IEnumerator CameraShake() {
