@@ -28,6 +28,7 @@ public class MK68Controller : WeaponController {
     AudioClip explosion;
     AudioClip keyTurn;
     AudioClip pin;
+    AudioClip shellUnscrew;
     AudioClip spoon;
     AudioClip wireCut;
 
@@ -51,6 +52,7 @@ public class MK68Controller : WeaponController {
         explosion = (AudioClip) Resources.Load("audio/MK68_explosion");
         keyTurn = (AudioClip) Resources.Load("audio/MK68_key_turn");
         pin = (AudioClip) Resources.Load("audio/MK68_pin");
+        shellUnscrew = (AudioClip) Resources.Load("audio/MK68_shell_unscrew");
         spoon = (AudioClip) Resources.Load("audio/MK68_spoon");
         wireCut = (AudioClip) Resources.Load("audio/MK68_wire_cut");
     }
@@ -97,6 +99,7 @@ public class MK68Controller : WeaponController {
             yield return new WaitForSeconds(2.0f);
 
             GetComponent<Animator>().Play("MK68_shell");
+            audio.PlayOneShot(shellUnscrew, 0.2f);
             yield return new WaitForSeconds(4.0f);
 
             pivot.Find("MK68_pin").gameObject.active = false;
@@ -179,8 +182,10 @@ public class MK68Controller : WeaponController {
     IEnumerator FireAction() {
         inputFlag = true;
         camCon.MusicMute();
-        audio.PlayOneShot(explosion, 1.0f);
-        audio.PlayOneShot(impactClip, 2.0f);
+        yield return new WaitForSeconds(0.2f);
+        transform.position = new Vector3(0, 1, -12);
+        audio.PlayOneShot(explosion, 1.5f);
+        //audio.PlayOneShot(impactClip, 1.0f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
         StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
         yield return new WaitForSeconds(4.0f);
