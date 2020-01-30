@@ -106,8 +106,8 @@ public class WeaponController : MonoBehaviour {
 
         StartCoroutine(CurveLerp(transform, transform.localPosition, transform.localPosition, x, y, curve, 0.5f));
         yield return new WaitForSeconds(0.1f);
-        if(Random.Range(0.0f,1.0f) > 0.5f) audio.PlayOneShot(rotateClip1, .1f);
-        else audio.PlayOneShot(rotateClip2, .1f);
+        if(Random.Range(0.0f,1.0f) > 0.5f) audio.PlayOneShot(rotateClip1, .15f);
+        else audio.PlayOneShot(rotateClip2, .15f);
         yield return new WaitForSeconds(0.4f);
         inputFlag = false;
     }
@@ -164,6 +164,7 @@ public class WeaponController : MonoBehaviour {
         canvas.Find("PopupController").GetComponent<PopupController>().Spawn(1);
         yield return new WaitForSeconds(1.5f);
         canvas.Find("Win").GetComponent<CanvasGroup>().alpha = 1;
+        yield return new WaitForSeconds(0.1f);
         GameObject.Find("WinParticles").GetComponent<ParticleSystem>().Play();
         audio.PlayOneShot(levelWinClip, 0.4f);
         StartCoroutine(Camera.main.GetComponent<CameraController>().MusicFadeOut());

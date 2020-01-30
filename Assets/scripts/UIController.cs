@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour {
     public Animator transition;
 
     void Start() {
-        if(SceneManager.GetActiveScene().name != "Title") {
+        if(SceneManager.GetActiveScene().name != "Title" && SceneManager.GetActiveScene().name != "End") {
             WeaponController weapon = FindObjectsOfType<WeaponController>()[0];
 
             transform.GetChild(0).GetComponent<Button>().onClick = new Button.ButtonClickedEvent();

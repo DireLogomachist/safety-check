@@ -25,11 +25,13 @@ public class MK68Controller : WeaponController {
     AudioClip countdownBeep1;
     AudioClip countdownBeep2;
     AudioClip countdownBeepEnd;
+    AudioClip countdownBeepCancel;
     AudioClip explosion;
     AudioClip keyTurn;
     AudioClip pin;
     AudioClip shellUnscrew;
     AudioClip spoon;
+    AudioClip switchClip;
     AudioClip wireCut;
 
     public override void Start() {
@@ -49,11 +51,13 @@ public class MK68Controller : WeaponController {
         countdownBeep1 = (AudioClip) Resources.Load("audio/countdown_beep_1");
         countdownBeep2 = (AudioClip) Resources.Load("audio/countdown_beep_2");
         countdownBeepEnd = (AudioClip) Resources.Load("audio/countdown_beep_end");
+        countdownBeepCancel = (AudioClip) Resources.Load("audio/countdown_beep_cancel");
         explosion = (AudioClip) Resources.Load("audio/MK68_explosion");
         keyTurn = (AudioClip) Resources.Load("audio/MK68_key_turn");
         pin = (AudioClip) Resources.Load("audio/MK68_pin");
         shellUnscrew = (AudioClip) Resources.Load("audio/MK68_shell_unscrew");
         spoon = (AudioClip) Resources.Load("audio/MK68_spoon");
+        switchClip = (AudioClip) Resources.Load("audio/LKM45_stock_switch");
         wireCut = (AudioClip) Resources.Load("audio/MK68_wire_cut");
     }
 
@@ -64,13 +68,13 @@ public class MK68Controller : WeaponController {
             timer -= Time.deltaTime*countdownSpeed;
             timerText.text = Mathf.CeilToInt(timer).ToString("00");
 
-            if(Time.time > beepTimer && timer > 0.0f) {
+            if(Time.time > beepTimer && timer > 0.0f && ammo > 0) {
                 if(countdownSpeed <= 1.0f) audio.PlayOneShot(countdownBeep1, 0.7f);
                 else audio.PlayOneShot(countdownBeep2, 0.7f);
                 beepTimer += 1.0f/countdownSpeed;
             }
 
-            if(timer <= 0.0f) {
+            if(timer <= 0.0f && ammo > 0) {
                 countdownStarted = false;
                 timerText.text = "00";
                 audio.PlayOneShot(countdownBeepEnd, 0.8f);
@@ -87,7 +91,7 @@ public class MK68Controller : WeaponController {
         inputFlag = true;
         if(!pinPulled) {
             pinPulled = true;
-            audio.PlayOneShot(pin, 0.8f);
+            audio.PlayOneShot(pin, 0.5f);
             GetComponent<Animator>().Play("MK68_pin");
             yield return new WaitForSeconds(1.0f);
 
@@ -165,12 +169,22 @@ public class MK68Controller : WeaponController {
 
     IEnumerator SwitchAction() {
         inputFlag = true;
-        //AnimationCurve curve = AnimationCurve.EaseInOut(0.0f , 0.0f , 1.0f , 1.0f);
         Transform swtch = pivot.Find("MK68_switch");
         Vector3 pos = swtch.localPosition;
-        if(!switchOn) StartCoroutine(CurveLerp(swtch, pos, pos, swtch.localRotation, Quaternion.Euler(10,0,0), curve, 0.5f));
-        else StartCoroutine(CurveLerp(swtch, pos, pos, swtch.localRotation, Quaternion.Euler(-10,0,0), curve, 0.5f));
-        switchOn = !switchOn;
+        if(!switchOn) {
+            ammo = 0;
+            UpdateAmmoUI();
+            StartCoroutine(CurveLerp(swtch, pos, pos, swtch.localRotation, Quaternion.Euler(10,0,0), curve, 0.5f));
+        } else {
+            StartCoroutine(CurveLerp(swtch, pos, pos, swtch.localRotation, Quaternion.Euler(-10,0,0), curve, 0.5f));
+        }
+        audio.PlayOneShot(switchClip, 0.3f);
+        yield return new WaitForSeconds(1.0f);
+        if(!switchOn) {
+            audio.PlayOneShot(countdownBeepCancel, 0.8f);
+            StartCoroutine(Safe());
+            switchOn = !switchOn;
+        }
         yield return new WaitForSeconds(0.5f);
         inputFlag = false;
     }

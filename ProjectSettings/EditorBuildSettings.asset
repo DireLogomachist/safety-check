@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/scenes/MK68.unity
     guid: 54ef700499600da4e932c32513bf2a4d
+  - enabled: 1
+    path: Assets/scenes/End.unity
+    guid: 338d4b321a16fd54ea2aff1269c98aa6
   m_configObjects: {}
