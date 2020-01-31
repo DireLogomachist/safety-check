@@ -198,7 +198,7 @@ public class MK68Controller : WeaponController {
         camCon.MusicMute();
         yield return new WaitForSeconds(0.2f);
         transform.position = new Vector3(0, 1, -12);
-        audio.PlayOneShot(explosion, 1.5f);
+        audio.PlayOneShot(explosion, 0.9f);
         //audio.PlayOneShot(impactClip, 1.0f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
         StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());

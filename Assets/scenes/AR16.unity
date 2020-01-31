@@ -1495,7 +1495,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  ammo: 5
+  ammo: 15
   magAmmo: 0
   safe: 0
   casing: {fileID: 4274755568313220246, guid: 2b0991b98c369464ebb70fb25f5ba502, type: 3}

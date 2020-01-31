@@ -35,9 +35,13 @@ public class UIController : MonoBehaviour {
     }
 
     void Update() {
-        if (Time.timeSinceLevelLoad > 7.0f && Input.anyKeyDown && sceneName == "End" && !Input.GetKeyDown("f")) {
+        if(Time.timeSinceLevelLoad > 7.0f && Input.anyKeyDown && sceneName == "End" && !Input.GetKeyDown("f")) {
             if(!Input.GetKey(KeyCode.Mouse0) && !Input.GetKey(KeyCode.Mouse1))
                 StartCoroutine(TitleReturn());
+        }
+
+        if(Time.timeSinceLevelLoad > 2.5f && Input.GetKeyDown(KeyCode.Escape) && sceneName != "End" && sceneName != "Title") {
+            StartCoroutine(TitleReturn());
         }
     }
 

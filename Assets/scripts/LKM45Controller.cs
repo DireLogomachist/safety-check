@@ -144,7 +144,7 @@ public class LKM45Controller : WeaponController {
             StartCoroutine(Eject(casing, pivot.Find("ejection_firing_spawn")));
             StartCoroutine(MuzzleFlash());
             StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
-            audio.PlayOneShot(gunshotClip, 1.0f);
+            audio.PlayOneShot(gunshotClip, 0.6f);
             if(Quaternion.Euler(transform.eulerAngles)*Vector3.right == -Vector3.forward) {
                 camCon.MusicMute();
                 audio.PlayOneShot(impactClip, 2.0f);
