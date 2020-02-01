@@ -159,7 +159,6 @@ public class MK68Controller : WeaponController {
         pivot.Find("MK68_wire_trigger_cut").gameObject.active = true;
         yield return new WaitForSeconds(0.75f);
         timer = 0.0f;
-        yield return new WaitForSeconds(1.0f);
         StartCoroutine(FireAction());
     }
 
@@ -195,9 +194,11 @@ public class MK68Controller : WeaponController {
 
     IEnumerator FireAction() {
         inputFlag = true;
+        yield return new WaitForSeconds(1.3f);
         camCon.MusicMute();
         yield return new WaitForSeconds(0.2f);
         transform.position = new Vector3(0, 1, -12);
+        GameObject.Find("Explosion").GetComponent<ParticleSystem>().Play();
         audio.PlayOneShot(explosion, 0.9f);
         //audio.PlayOneShot(impactClip, 1.0f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
