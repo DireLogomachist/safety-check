@@ -64,17 +64,17 @@ public class MK68Controller : WeaponController {
     public override void Update() {
         base.Update();
 
-        if(countdownStarted) {
+        if(countdownStarted && ammo > 0) {
             timer -= Time.deltaTime*countdownSpeed;
             timerText.text = Mathf.CeilToInt(timer).ToString("00");
 
-            if(Time.time > beepTimer && timer > 0.0f && ammo > 0) {
+            if(Time.time > beepTimer && timer > 0.0f) {
                 if(countdownSpeed <= 1.0f) audio.PlayOneShot(countdownBeep1, 0.7f);
                 else audio.PlayOneShot(countdownBeep2, 0.7f);
                 beepTimer += 1.0f/countdownSpeed;
             }
 
-            if(timer <= 0.0f && ammo > 0) {
+            if(timer <= 0.0f) {
                 countdownStarted = false;
                 timerText.text = "00";
                 audio.PlayOneShot(countdownBeepEnd, 0.8f);
@@ -200,7 +200,6 @@ public class MK68Controller : WeaponController {
         transform.position = new Vector3(0, 1, -12);
         GameObject.Find("Explosion").GetComponent<ParticleSystem>().Play();
         audio.PlayOneShot(explosion, 0.9f);
-        //audio.PlayOneShot(impactClip, 1.0f);
         canvas.GetComponent<UIController>().transition.SetTrigger("Splatter");
         StartCoroutine(Camera.main.GetComponent<CameraController>().CameraShake());
         yield return new WaitForSeconds(4.0f);
